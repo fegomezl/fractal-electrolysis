@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include <fstream>
-#include <random>
+#include "vector.h"
+#include "random64.h"
 
 using namespace std;
