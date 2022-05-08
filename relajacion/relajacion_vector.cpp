@@ -12,10 +12,10 @@ void print_array(std::vector<T> array, int nx, int ny, std::string name="data.da
 
 int main(int argc, char const *argv[])
 {
-    const int nx = 100;
-    const int ny = 100;
+    const int nx = 200;
+    const int ny = 200;
     const int N = nx*ny;
-    std::vector<double> phi(N,0); for(auto &i : phi) i =  (rand() % 20);
+    std::vector<double> phi(N); for(auto &i : phi) i =  (rand() % 20);
     std::vector<int> boundary(N,1);//0 if a cell is a boundary
 
     //Impose boundary conditions

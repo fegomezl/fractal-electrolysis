@@ -13,8 +13,8 @@ void print_array(std::array<T, SIZE> array, int nx, int ny, std::string name="da
 
 int main(int argc, char const *argv[])
 {
-    const int nx = 100;
-    const int ny = 100;
+    const int nx = 200;
+    const int ny = 200;
     const int N = nx*ny;
     std::array<double, N> phi; for(auto &i : phi) i =  (rand() % 20);
     std::array<int, N> boundary; boundary.fill(1);//0 if a cell is a boundary
