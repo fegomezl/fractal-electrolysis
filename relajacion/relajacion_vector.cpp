@@ -1,23 +1,22 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <array>
+#include <vector>
 #include <algorithm>
 
-template<std::size_t SIZE>
-void boundary_conditions(std::array<double, SIZE> & phi,std::array<int, SIZE> & boundary,int nx,int ny);
-template<std::size_t SIZE>
-void relaxation(std::array<double, SIZE> & phi,std::array<int, SIZE> boundary,int nx,int ny, int max_iter=1000, bool verbose=false, double alpha=1.0, double res=1e-6);
-template<typename T, std::size_t SIZE>
-void print_array(std::array<T, SIZE> array, int nx, int ny, std::string name="data.dat");
+
+void boundary_conditions(std::vector<double> &phi,std::vector<int> &boundary,int nx,int ny);
+void relaxation(std::vector<double> &phi,std::vector<int> boundary,int nx,int ny, int max_iter=1000, bool verbose=false, double alpha=1.0, double res=1e-6);
+template<typename T>
+void print_array(std::vector<T> array, int nx, int ny, std::string name="data.dat");
 
 int main(int argc, char const *argv[])
 {
     const int nx = 100;
     const int ny = 100;
     const int N = nx*ny;
-    std::array<double, N> phi; for(auto &i : phi) i =  (rand() % 20);
-    std::array<int, N> boundary; boundary.fill(1);//0 if a cell is a boundary
+    std::vector<double> phi(N); for(auto &i : phi) i =  (rand() % 20);
+    std::vector<int> boundary(N,1);//0 if a cell is a boundary
 
     //Impose boundary conditions
     boundary_conditions(phi,boundary,nx,ny);
@@ -32,8 +31,7 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-template<std::size_t SIZE>
-void relaxation(std::array<double, SIZE> & phi,std::array<int, SIZE> boundary,int nx,int ny, int max_iter, bool verbose, double alpha, double res)
+void relaxation(std::vector<double> &phi,std::vector<int> boundary,int nx,int ny, int max_iter, bool verbose, double alpha, double res)
 {
     int i,j,iter;
     auto phi_new = phi;
@@ -122,10 +120,10 @@ void relaxation(std::array<double, SIZE> & phi,std::array<int, SIZE> boundary,in
 
     if(iter==max_iter)
         std::cout << "Relaxation dint converge after " << iter << " steps. Residue: "<< TotalRes <<"\n";
+
 }
 
-template<std::size_t SIZE>
-void boundary_conditions(std::array<double, SIZE> & phi,std::array<int, SIZE> & boundary,int nx,int ny){
+void boundary_conditions(std::vector<double> &phi,std::vector<int> &boundary,int nx,int ny){
     int i, j;
     for (i = 0; i < nx; ++i)
     {
@@ -156,8 +154,9 @@ void boundary_conditions(std::array<double, SIZE> & phi,std::array<int, SIZE> & 
             boundary[i+j*nx] = 0;
         }
 }
-template<typename T, std::size_t SIZE>
-void print_array(std::array<T, SIZE> array, int nx, int ny, std::string name)
+
+template<typename T>
+void print_array(std::vector<T> array, int nx, int ny, std::string name)
 {   
     std::ofstream fout;
     fout.open(name, std::ios::binary);
