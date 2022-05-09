@@ -36,7 +36,6 @@ template<std::size_t SIZE>
 void relaxation(std::array<double, SIZE> & phi,std::array<int, SIZE> boundary,int nx,int ny, int max_iter, bool verbose, double alpha, double res)
 {
     int i,j,iter;
-    auto phi_old = phi;
     auto phi_new = phi;
     double R=0.0;
     double TotalRes=0.0;
@@ -50,45 +49,45 @@ void relaxation(std::array<double, SIZE> & phi,std::array<int, SIZE> boundary,in
         for (i = 0; i < nx; ++i)
         {
             for (j = 0; j < ny; ++j){   
-                R = boundary[i+nx*j]*(4*phi_old[i+nx*j]-phi_old[i+nx*(j+1)]-phi_old[i+nx*(j-1)]-phi_old[(i+1)+nx*j]-phi_old[(i-1)+nx*j]);
-                phi_new[i+nx*j] = phi_old[i+nx*j]-alpha*R*0.25;
+                R = boundary[i+nx*j]*(4*phi[i+nx*j]-phi[i+nx*(j+1)]-phi[i+nx*(j-1)]-phi[(i+1)+nx*j]-phi[(i-1)+nx*j]);
+                phi_new[i+nx*j] = phi[i+nx*j]-alpha*R*0.25;
                 TotalRes+=abs(R);
 
                 //Left colum
                 if(i ==0){
-                    R = boundary[i+nx*j]*(3*phi_old[i+nx*j]-phi_old[i+nx*(j+1)]-phi_old[i+nx*(j-1)]-phi_old[(i+1)+nx*j]);
-                    phi_new[i+nx*j] = phi_old[i+nx*j]-alpha*R/3.0;
+                    R = boundary[i+nx*j]*(3*phi[i+nx*j]-phi[i+nx*(j+1)]-phi[i+nx*(j-1)]-phi[(i+1)+nx*j]);
+                    phi_new[i+nx*j] = phi[i+nx*j]-alpha*R/3.0;
                     TotalRes+=abs(R);
 
                     //Corners
                     if(j==0){
-                        R = boundary[i+nx*j]*(2*phi_old[i+nx*j]-phi_old[i+nx*(j+1)]-phi_old[(i+1)+nx*j]);
-                        phi_new[i+nx*j] = phi_old[i+nx*j]-alpha*R*0.5;
+                        R = boundary[i+nx*j]*(2*phi[i+nx*j]-phi[i+nx*(j+1)]-phi[(i+1)+nx*j]);
+                        phi_new[i+nx*j] = phi[i+nx*j]-alpha*R*0.5;
                         TotalRes+=abs(R);
                     }
                     if(j==ny-1){
-                        R = boundary[i+nx*j]*(2*phi_old[i+nx*j]-phi_old[i+nx*(j-1)]-phi_old[(i+1)+nx*j]);
-                        phi_new[i+nx*j] = phi_old[i+nx*j]-alpha*R*0.5;
+                        R = boundary[i+nx*j]*(2*phi[i+nx*j]-phi[i+nx*(j-1)]-phi[(i+1)+nx*j]);
+                        phi_new[i+nx*j] = phi[i+nx*j]-alpha*R*0.5;
                         TotalRes+=abs(R);
                     }
                 }
                 //Right colum
                 if(i==ny-1){
-                    R = boundary[i+nx*j]*(3*phi_old[i+nx*j]-phi_old[i+nx*(j+1)]-phi_old[i+nx*(j-1)]-phi_old[(i-1)+nx*j]);
-                    phi_new[i+nx*j] = phi_old[i+nx*j]-alpha*R/3.0;
+                    R = boundary[i+nx*j]*(3*phi[i+nx*j]-phi[i+nx*(j+1)]-phi[i+nx*(j-1)]-phi[(i-1)+nx*j]);
+                    phi_new[i+nx*j] = phi[i+nx*j]-alpha*R/3.0;
                     TotalRes+=abs(R);
 
                     //Corners
                     if(j==0)
                     {
-                        R = boundary[i+nx*j]*(2*phi_old[i+nx*j]-phi_old[i+nx*(j+1)]-phi_old[(i-1)+nx*j]);
-                        phi_new[i+nx*j] = phi_old[i+nx*j]-alpha*R*0.5;
+                        R = boundary[i+nx*j]*(2*phi[i+nx*j]-phi[i+nx*(j+1)]-phi[(i-1)+nx*j]);
+                        phi_new[i+nx*j] = phi[i+nx*j]-alpha*R*0.5;
                         TotalRes+=abs(R);
                     }
                     if(j==ny-1)
                     {
-                        R = boundary[i+nx*j]*(2*phi_old[i+nx*j]-phi_old[i+nx*(j-1)]-phi_old[(i-1)+nx*j]);
-                        phi_new[i+nx*j] = phi_old[i+nx*j]-alpha*R*0.5;
+                        R = boundary[i+nx*j]*(2*phi[i+nx*j]-phi[i+nx*(j-1)]-phi[(i-1)+nx*j]);
+                        phi_new[i+nx*j] = phi[i+nx*j]-alpha*R*0.5;
                         TotalRes+=abs(R);
                     }
                 }
@@ -96,13 +95,13 @@ void relaxation(std::array<double, SIZE> & phi,std::array<int, SIZE> boundary,in
 
             //Bottom row
             j = 0;
-            R = boundary[i+nx*j]*(3*phi_old[i+nx*j]-phi_old[i+nx*(j+1)]-phi_old[(i+1)+nx*j]-phi_old[(i-1)+nx*j]);
-            phi_new[i+nx*j] = phi_old[i+nx*j]-alpha*R/3.0;
+            R = boundary[i+nx*j]*(3*phi[i+nx*j]-phi[i+nx*(j+1)]-phi[(i+1)+nx*j]-phi[(i-1)+nx*j]);
+            phi_new[i+nx*j] = phi[i+nx*j]-alpha*R/3.0;
             TotalRes+=abs(R);
             //Top row
             j = ny-1;
-            R = boundary[i+nx*j]*(3*phi_old[i+nx*j]-phi_old[i+nx*(j-1)]-phi_old[(i+1)+nx*j]-phi_old[(i-1)+nx*j]);
-            phi_new[i+nx*j] = phi_old[i+nx*j]-alpha*R/3.0;
+            R = boundary[i+nx*j]*(3*phi[i+nx*j]-phi[i+nx*(j-1)]-phi[(i+1)+nx*j]-phi[(i-1)+nx*j]);
+            phi_new[i+nx*j] = phi[i+nx*j]-alpha*R/3.0;
             TotalRes+=abs(R);
         }
 
@@ -118,13 +117,11 @@ void relaxation(std::array<double, SIZE> & phi,std::array<int, SIZE> boundary,in
         if (verbose)
             std::cout << "Iteration: " << iter << " Residue: " << TotalRes <<"\n";
     
-        phi_old = phi_new;
+        phi = phi_new;
     }
 
     if(iter==max_iter)
         std::cout << "Relaxation dint converge after " << iter << " steps. Residue: "<< TotalRes <<"\n";
-
-    phi = phi_new;
 }
 
 template<std::size_t SIZE>
