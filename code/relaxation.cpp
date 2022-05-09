@@ -89,12 +89,12 @@ void relaxation(Config config, vector<double> &phi, vector<int> boundary, bool v
 }
 
 
-vector<vector3D> get_gradient(Config config, vector<double> &phi)
+vector<vector<double>> get_gradient(Config config, vector<double> &phi)
 {   
     //size of the grid
     int i,j,t;
-    vector <vector3D> grad_field(config.N);
-    vector3D grad; grad.load(0,0,0);
+    vector<double> grad_field_x(config.N);
+    vector<double> grad_field_y(config.N);
     double partial_x,partial_y;
 
     for (i = 0; i < config.nx; ++i)
@@ -104,22 +104,22 @@ vector<vector3D> get_gradient(Config config, vector<double> &phi)
             if(i ==0){
                 partial_x = (phi[1+config.nx*j]-phi[config.nx*j])/(config.lx); //forward deriv
                 partial_y = (phi[config.nx*(j+1)]-phi[config.nx*(j-1)])/(2*config.ly); //center deriv
-                grad.load(partial_x,partial_y,0);
-                grad_field[config.nx*j] = grad;
+                grad_field_x[config.nx*j] = partial_x;
+                grad_field_y[config.nx*j] = partial_y;
             }
             //Right colum
             else if(i==config.ny-1){
                 partial_x = (phi[i+config.nx*j]-phi[i-1+config.nx*j])/(config.lx); //backward deriv
                 partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*(j-1)])/(2*config.ly); //center deriv
-                grad.load(partial_x,partial_y,0);
-                grad_field[i+config.nx*j] = grad;
+                grad_field_x[i+config.nx*j] = partial_x;
+                grad_field_y[i+config.nx*j] = partial_y;
             }
             //Center
             else{
                 partial_x = (phi[i+1+config.nx*j]-phi[i-1+config.nx*j])/(2*config.lx); //center deriv
                 partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*(j-1)])/(2*config.ly); //center deriv
-                grad.load(partial_x,partial_y,0);
-                grad_field[i+config.nx*j] = grad;
+                grad_field_x[i+config.nx*j] = partial_x;
+                grad_field_y[i+config.nx*j] = partial_y;
             }
         }
 
@@ -128,42 +128,43 @@ vector<vector3D> get_gradient(Config config, vector<double> &phi)
             //bottom j=0
             partial_x = (phi[1]-phi[0])/(config.lx); //forward deriv
             partial_y = (phi[config.nx]-phi[0])/(config.ly); //forward deriv
-            grad.load(partial_x,partial_y,0);
-            grad_field[0] = grad;
+            grad_field_x[0] = partial_x;
+            grad_field_y[0] = partial_y;
             //top
             t = config.ny-1; //j
             partial_x = (phi[1+config.nx*t]-phi[config.nx*t])/(config.lx); //forward deriv
             partial_y = (phi[config.nx*t]-phi[config.nx*(t-1)])/(config.ly); //backward deriv
-            grad.load(partial_x,partial_y,0);
-            grad_field[config.nx*t] = grad;
+            grad_field_x[config.nx*t] = partial_x;
+            grad_field_y[config.nx*t] = partial_y;
         }
         //right corners
         else if (i == config.nx-1){
             //bottom j=0
             partial_x = (phi[i]-phi[i-1])/(config.lx); //backward deriv
             partial_y = (phi[i+config.nx]-phi[i])/(config.ly); //forward deriv
-            grad.load(partial_x,partial_y,0);
-            grad_field[i] = grad;
+            grad_field_x[i] = partial_x;
+            grad_field_y[i] = partial_y;
             //top
             t = config.ny-1; //j
             partial_x = (phi[i+config.nx*t]-phi[i-1+config.nx*t])/(config.lx); //backward deriv
             partial_y = (phi[i+config.nx*t]-phi[i+config.nx*(t-1)])/(config.ly); //backward deriv
-            grad.load(partial_x,partial_y,0);
-            grad_field[i+config.nx*t] = grad;
+            grad_field_x[i+config.nx*t] = partial_x;
+            grad_field_y[i+config.nx*t] = partial_y;
         }
         else{
             //Bottom row j=0
             partial_x = (phi[i+1]-phi[i-1])/(2*config.lx); //center deriv
             partial_y = (phi[i+config.nx]-phi[i])/(config.ly); //forward deriv
-            grad.load(partial_x,partial_y,0);
-            grad_field[i] = grad;
+            grad_field_x[i] = partial_x;
+            grad_field_y[i] = partial_y;
             //Top row
             t = config.ny-1; //j
             partial_x = (phi[i+1+config.nx*t]-phi[i-1+config.nx*t])/(2*config.lx); //center deriv
             partial_y = (phi[i+config.nx*t]-phi[i+config.nx*(t-1)])/(config.ly); //backward deriv
-            grad.load(partial_x,partial_y,0);
-            grad_field[i+config.nx*t] = grad;
+            grad_field_x[i+config.nx*t] = partial_x;
+            grad_field_y[i+config.nx*t] = partial_y;
         }
     }
+    vector<vector<double>> grad_field = {grad_field_x,grad_field_x};
     return grad_field;
 }
