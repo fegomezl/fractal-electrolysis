@@ -3,7 +3,7 @@ set term pdf
 unset g
 set view map
 set pm3d at b map
-#set dgrid3d 200,100,2
+set dgrid3d 200,100,2
 
 set o "results/boundary.pdf"
 file = "results/boundary.txt"
