@@ -11,18 +11,18 @@ int int_pow(int base, unsigned int exponent){
 
 Config::Config(){
     base = 3;
-    refinements = 4;
+    refinements = 3;
 
-    Lx = 11.;
-    Ly = 11.;
+    Lx = 15.;
+    Ly = 15.;
 
     Rint = 1.;
-    Rext = 5.;
+    Rext = 6.;
 
     V = 1.;
     V_dis = 0.5;
 
-    max_iter_relax = 1000;
+    max_iter_relax = 10000;
     alpha_relax = 1.0;
     res_relax = 1e-6;
 

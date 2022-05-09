@@ -1,7 +1,7 @@
 #Compiling parameters
 PROCCESORS = 4
 CXX = g++ #mpic++
-FLAGS = -std=c++11 -O3 $(MFEM_FLAGS)
+FLAGS = -std=c++11 -O3
 RUN = ./#mpirun -np $(PROCCESORS) ./
 SOURCES = $(wildcard code/*.cpp)
 DEPENDENCIES = $(SOURCES:code/%.cpp=.objects/%.o)
@@ -24,6 +24,9 @@ main.x: $(DEPENDENCIES)
 	@echo -e 'Building' $@ '... \c'
 	@$(CXX) $(FLAGS) -c $< -o $@
 	@echo -e 'Done!\n'
+
+plot:
+	python3 settings/plot_maps.py
 
 clean:
 	@rm -rf *.x results/*.txt results/*.pdf

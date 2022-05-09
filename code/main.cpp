@@ -14,10 +14,13 @@ int main (int argc, char **argv){
     initialization(config, phi, boundary, dissociation);
 
     relaxation(config, phi, boundary);
+    auto gradient = get_gradient(config,phi);
 
     print_array(config, phi, "results/phi.txt");
     print_array(config, boundary, "results/boundary.txt");
     print_array(config, dissociation, "results/dissociation.txt");
+
+    std::cout << "nx: " << config.nx << " ny: " << config.ny << "\n";
 
     return 0;
 }

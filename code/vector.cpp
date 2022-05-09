@@ -16,51 +16,7 @@
  * You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-#include <iostream>
-#include <cmath>
-
-class vector3D{
- private:
-  double X, Y, Z;
-
- public:
-  //Initialize the vector
-  void load(double x0, double y0, double z0);
-  //Get the components
-  double x(void){return X;};
-  double y(void){return Y;};
-  double z(void){return Z;};
-  //Show the vector
-  void show(void);
-  //-------------------------
-  //Vectorial operators
-  //-------------------------
-  //Equal
-  void operator= (vector3D v2);
-  //Sum
-  vector3D operator+ (vector3D v2);
-  void operator+=(vector3D v2);
-  //Substraction
-  vector3D operator- (vector3D v2);
-  void operator-=(vector3D v2);
-  //Scalar multiplication
-  vector3D operator* (double a);
-  void operator*=(double a);
-  friend vector3D operator* (double a,vector3D v1);	
-  //Scalar division
-  vector3D operator/ (double a);
-  void operator/=(double a);
-  //Dot product
-  double operator* (vector3D v2);
-  //Cross product
-  vector3D operator^ (vector3D v2);
-  //Norm operations
-  double norm2(void);    
-  double norm(void);
-  //Angle between two vectors
-  friend double angle(vector3D v1, vector3D v2);
-};
+#include "header.h"
 //--------------------------------------
 //  vector class functions 
 //--------------------------------------
