@@ -1,22 +1,24 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <vector>
+#include <array>
 #include <algorithm>
+#include <memory>
 
 
-void boundary_conditions(std::vector<double> &phi,std::vector<int> &boundary,int nx,int ny);
-void relaxation(std::vector<double> &phi,std::vector<int> boundary,int nx,int ny, int max_iter=1000, bool verbose=false, double alpha=1.0, double res=1e-6);
+void boundary_conditions(std::unique_ptr<double[]> &phi,std::unique_ptr<int[]> &boundary,int nx,int ny);
+void relaxation(std::unique_ptr<double[]> &phi,std::unique_ptr<int[]> &boundary,int nx,int ny, int max_iter=1000, bool verbose=false, double alpha=1.0, double res=1e-6);
 template<typename T>
-void print_array(std::vector<T> array, int nx, int ny, std::string name="data.dat");
+void print_array(std::unique_ptr<T> &array, int nx, int ny, std::string name="data.dat");
 
 int main(int argc, char const *argv[])
 {
     const int nx = 1000;
     const int ny = 1000;
     const int N = nx*ny;
-    std::vector<double> phi(N); for(auto &i : phi) i =  (rand() % 20);
-    std::vector<int> boundary(N,1);//0 if a cell is a boundary
+
+    std::unique_ptr<double[]> phi{ new double[N] }; for(int i=0; i<N; i++) phi[i]=(rand()%20);
+    std::unique_ptr<int[]> boundary{ new int[N] }; for(int i=0; i<N; i++) boundary[i]=1;
 
     //Impose boundary conditions
     boundary_conditions(phi,boundary,nx,ny);
@@ -31,11 +33,17 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-void relaxation(std::vector<double> &phi,std::vector<int> boundary,int nx,int ny, int max_iter, bool verbose, double alpha, double res)
+
+void relaxation(std::unique_ptr<double[]> &phi,std::unique_ptr<int[]> &boundary,int nx,int ny, int max_iter, bool verbose, double alpha, double res)
 {
     int i,j,iter;
-    auto phi_old = phi;
-    auto phi_new = phi;
+    std::unique_ptr<double[]> phi_old{ new double[nx*ny] };
+    std::unique_ptr<double[]> phi_new{ new double[nx*ny] };
+    for (int i = 0; i < nx*ny; ++i)
+    {
+        phi_old[i] = phi[i];
+        phi_new[i] = phi[i];
+    }
     double R=0.0;
     double TotalRes=0.0;
 
@@ -116,16 +124,18 @@ void relaxation(std::vector<double> &phi,std::vector<int> boundary,int nx,int ny
         if (verbose)
             std::cout << "Iteration: " << iter << " Residue: " << TotalRes <<"\n";
     
-        phi_old = phi_new;
+        for (int i = 0; i < nx*ny; ++i)
+            phi_old[i] = phi_new[i];
     }
 
     if(iter==max_iter)
         std::cout << "Relaxation dint converge after " << iter << " steps. Residue: "<< TotalRes <<"\n";
 
-    phi = phi_new;
+    for (int i = 0; i < nx*ny; ++i)
+        phi[i] = phi_new[i];
 }
 
-void boundary_conditions(std::vector<double> &phi,std::vector<int> &boundary,int nx,int ny){
+void boundary_conditions(std::unique_ptr<double[]> &phi,std::unique_ptr<int[]> &boundary,int nx,int ny){
     int i, j;
     for (i = 0; i < nx; ++i)
     {
@@ -156,9 +166,8 @@ void boundary_conditions(std::vector<double> &phi,std::vector<int> &boundary,int
             boundary[i+j*nx] = 0;
         }
 }
-
 template<typename T>
-void print_array(std::vector<T> array, int nx, int ny, std::string name)
+void print_array(std::unique_ptr<T> &array, int nx, int ny, std::string name)
 {   
     std::ofstream fout;
     fout.open(name, std::ios::binary);

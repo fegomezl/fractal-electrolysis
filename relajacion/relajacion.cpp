@@ -13,8 +13,8 @@ void print_array(std::array<T, SIZE> array, int nx, int ny, std::string name="da
 
 int main(int argc, char const *argv[])
 {
-    const int nx = 200;
-    const int ny = 200;
+    const int nx = 100;
+    const int ny = 100;
     const int N = nx*ny;
     std::array<double, N> phi; for(auto &i : phi) i =  (rand() % 20);
     std::array<int, N> boundary; boundary.fill(1);//0 if a cell is a boundary
@@ -134,7 +134,7 @@ void boundary_conditions(std::array<double, SIZE> & phi,std::array<int, SIZE> & 
     {
         //Bottom row
         j =0;
-        phi[i+j*nx]=10.0;
+        phi[i+j*nx]=20.0;
         boundary[i+j*nx] = 0;
         //Top row
         j = ny-1;
@@ -145,7 +145,7 @@ void boundary_conditions(std::array<double, SIZE> & phi,std::array<int, SIZE> & 
     {
         //Left colum
         i =0;
-        phi[i+j*nx]=30.0;
+        phi[i+j*nx]=20.0;
         boundary[i+j*nx] = 0;
         //Right colum
         i = nx-1;
