@@ -26,7 +26,7 @@ main.x: $(DEPENDENCIES)
 	@echo -e 'Done!\n'
 
 clean:
-	@rm -rf *.x
+	@rm -rf *.x results/*.txt results/*.pdf
 
 oclean:
 	@rm -rf .objects/*.o
