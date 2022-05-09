@@ -13,6 +13,9 @@ zz = data[:,2]
 data=np.loadtxt('results/dissociation.txt')
 zzz = data[:,2]
 
+gradx=np.loadtxt('results/gradientx.txt')[:,2]
+grady=np.loadtxt('results/gradienty.txt')[:,2]
+
 nx = np.shape(np.unique(x_index))[0]
 ny = np.shape(np.unique(y_index))[0]
 
@@ -32,4 +35,8 @@ plt.show()
 
 plt.imshow(zzz.reshape(nx,ny))
 plt.title('Dissociation')
+plt.show()
+
+plt.quiver(x_index,y_index,gradx,grady)
+plt.title('Gradient')
 plt.show()

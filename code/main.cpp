@@ -19,6 +19,8 @@ int main (int argc, char **argv){
     print_array(config, phi, "results/phi.txt");
     print_array(config, boundary, "results/boundary.txt");
     print_array(config, dissociation, "results/dissociation.txt");
+    print_array(config, gradient[0], "results/gradientx.txt");
+    print_array(config, gradient[1], "results/gradienty.txt");
 
     std::cout << "nx: " << config.nx << " ny: " << config.ny << "\n";
 
