@@ -26,11 +26,11 @@ int main (int argc, char **argv){
     duration<double, std::milli> ms_double = t2 - t1;
     std::cout << ms_double.count() << "ms\n\n";
 
-    print_array(config, phi, "results/phi.txt");
-    print_array(config, boundary, "results/boundary.txt");
-    print_array(config, dissociation, "results/dissociation.txt");
-    print_array(config, gradientx, "results/gradientx.txt");
-    print_array(config, gradienty, "results/gradienty.txt");
+    print_array(config, phi, "results/phi.dat");
+    print_array(config, boundary, "results/boundary.dat");
+    print_array(config, dissociation, "results/dissociation.dat");
+    print_array(config, gradientx, "results/gradientx.dat");
+    print_array(config, gradienty, "results/gradienty.dat");
 
     std::cout << "nx: " << config.nx << " ny: " << config.ny << "\n";
     std::cout << "N: " << config.N << "\n";

@@ -1,19 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-data=np.loadtxt('results/phi.txt')
+data=np.loadtxt('results/phi.dat')
 x_index = data[:,0]
 y_index = data[:,1]
 z = data[:,2]
 
-data=np.loadtxt('results/boundary.txt')
+data=np.loadtxt('results/boundary.dat')
 zz = data[:,2]
 
-data=np.loadtxt('results/dissociation.txt')
+data=np.loadtxt('results/dissociation.dat')
 zzz = data[:,2]
 
-gradx=np.loadtxt('results/gradientx.txt')[:,2]
-grady=np.loadtxt('results/gradienty.txt')[:,2]
+gradx=np.loadtxt('results/gradientx.dat')[:,2]
+grady=np.loadtxt('results/gradienty.dat')[:,2]
 
 nx = np.shape(np.unique(x_index))[0]
 ny = np.shape(np.unique(y_index))[0]
