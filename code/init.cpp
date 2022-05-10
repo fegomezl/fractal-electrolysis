@@ -13,8 +13,8 @@ Config::Config(){
     base = 3;
     refinements = 6;
 
-    Lx = 15.;
-    Ly = 15.;
+    Lx = 16.;
+    Ly = 16.;
 
     Rint = 1.;
     Rext = 6.;
@@ -28,35 +28,47 @@ Config::Config(){
 
     molar_volume = 0.04;
     molarity = 1.;
-    M = 0;
 
     nx = int_pow(base, refinements); 
     ny = int_pow(base, refinements); 
     N = nx*ny;
     lx = Lx/nx; 
     ly = Ly/ny;
+    particle_proportion = molarity*molar_volume;
 }
 
 void initialization(const Config &config, std::vector<bool> &boundary, std::vector<double> &particles, std::vector<double> &phi){
 
     /****
-     * Initialization of electric potential and boundary 
-     * conditions.
-     ****/ 
+     * Initialization of electric potentiall, boundary 
+     * conditions and dissociation probability.
+     ****/
+    std::vector<int> dissociation;    
     for(int ii = 0; ii < config.N; ii++){
         double x = (ii%config.nx-(config.nx-1)/2)*config.lx;
         double y = (ii/config.nx-(config.ny-1)/2)*config.ly;
-        double r = sqrt(x*x+y*y);
+        double r = hypot(x, y);
 
         if (r <= config.Rint) {
             phi[ii] = 0.;
             boundary[ii] = 0;
         } else if (r >= config.Rext) {
-            phi[ii] = 1.;
+            phi[ii] = config.V;
             boundary[ii] = 0;
         } else {
             phi[ii] = config.V*log(r/config.Rint)/log(config.Rext/config.Rint);
             boundary[ii] = 1;
+            dissociation.push_back(ii);
         }
+    }
+
+    Crandom random(config.seed);
+    int N_sites = dissociation.size();
+    int N_particles = config.particle_proportion*dissociation.size();
+    for(int ii = 0; ii < N_particles; ii++){
+        int jj = (N_sites-1)*random.r();
+        int kk = dissociation[jj];
+        particles.push_back((kk%config.nx-(config.nx-1)/2)*config.lx);
+        particles.push_back((kk/config.nx-(config.ny-1)/2)*config.ly);
     }
 }

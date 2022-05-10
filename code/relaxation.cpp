@@ -103,22 +103,22 @@ std::vector<std::vector<double>> get_gradient(const Config &config, const std::v
             if(j==0){
                 partial_x = (phi[i+1+config.nx*j]-phi[i-1+config.nx*j])/(2*config.lx); //center deriv
                 partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*j])/(config.ly); //forward deriv
-                grad_field_x[i+config.nx*j] = partial_x;
-                grad_field_y[i+config.nx*j] = partial_y;
+                grad_field_x[i+config.nx*j] = -partial_x;
+                grad_field_y[i+config.nx*j] = -partial_y;
             }
             //Top row
             else if(j==config.ny-1){
                 partial_x = (phi[i+1+config.nx*j]-phi[i-1+config.nx*j])/(2*config.lx); //center deriv
                 partial_y = (phi[i+config.nx*j]-phi[i+config.nx*(j-1)])/(config.ly); //backward deriv
-                grad_field_x[i+config.nx*j] = partial_x;
-                grad_field_y[i+config.nx*j] = partial_y;
+                grad_field_x[i+config.nx*j] = -partial_x;
+                grad_field_y[i+config.nx*j] = -partial_y;
             }
             //Center
             else{
                 partial_x = (phi[i+1+config.nx*j]-phi[i-1+config.nx*j])/(2*config.lx); //center deriv
                 partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*(j-1)])/(2*config.ly); //center deriv
-                grad_field_x[i+config.nx*j] = partial_x;
-                grad_field_y[i+config.nx*j] = partial_y;
+                grad_field_x[i+config.nx*j] = -partial_x;
+                grad_field_y[i+config.nx*j] = -partial_y;
             }
         }
         //Bottom Corners
@@ -127,14 +127,14 @@ std::vector<std::vector<double>> get_gradient(const Config &config, const std::v
             i=0;
             partial_x = (phi[i+1+config.nx*j]-phi[i+config.nx*j])/(config.lx); //forward deriv
             partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*j])/(config.ly); //forward deriv
-            grad_field_x[i+config.nx*j] = partial_x;
-            grad_field_y[i+config.nx*j] = partial_y;
+            grad_field_x[i+config.nx*j] = -partial_x;
+            grad_field_y[i+config.nx*j] = -partial_y;
             //right
             i=config.nx-1;
             partial_x = (phi[i+config.nx*j]-phi[i-1+config.nx*j])/(config.lx); //backward deriv
             partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*j])/(config.ly); //forward deriv
-            grad_field_x[i+config.nx*j] = partial_x;
-            grad_field_y[i+config.nx*j] = partial_y;
+            grad_field_x[i+config.nx*j] = -partial_x;
+            grad_field_y[i+config.nx*j] = -partial_y;
         }
         //Top Corners
         else if(j==config.ny-1){
@@ -142,14 +142,14 @@ std::vector<std::vector<double>> get_gradient(const Config &config, const std::v
             i=0;
             partial_x = (phi[i+1+config.nx*j]-phi[i+config.nx*j])/(config.lx); //forward deriv
             partial_y = (phi[i+config.nx*j]-phi[i+config.nx*(j-1)])/(config.ly); //backward deriv
-            grad_field_x[i+config.nx*j] = partial_x;
-            grad_field_y[i+config.nx*j] = partial_y;
+            grad_field_x[i+config.nx*j] = -partial_x;
+            grad_field_y[i+config.nx*j] = -partial_y;
             //right
             i=config.nx-1;
             partial_x = (phi[i+config.nx*j]-phi[i-1+config.nx*j])/(config.lx); //backward deriv
             partial_y = (phi[i+config.nx*j]-phi[i+config.nx*(j-1)])/(config.ly); //backward deriv
-            grad_field_x[i+config.nx*j] = partial_x;
-            grad_field_y[i+config.nx*j] = partial_y;
+            grad_field_x[i+config.nx*j] = -partial_x;
+            grad_field_y[i+config.nx*j] = -partial_y;
         }
         //Left and Right colums
         else{
@@ -157,14 +157,14 @@ std::vector<std::vector<double>> get_gradient(const Config &config, const std::v
             i=0;
             partial_x = (phi[i+1+config.nx*j]-phi[i+config.nx*j])/(config.lx); //forward deriv
             partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*(j-1)])/(2*config.ly); //center deriv
-            grad_field_x[i+config.nx*j] = partial_x;
-            grad_field_y[i+config.nx*j] = partial_y;
+            grad_field_x[i+config.nx*j] = -partial_x;
+            grad_field_y[i+config.nx*j] = -partial_y;
             //Right
             i=config.nx-1;
             partial_x = (phi[i+config.nx*j]-phi[i-1+config.nx*j])/(config.lx); //backward deriv
             partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*(j-1)])/(2*config.ly); //center deriv
-            grad_field_x[i+config.nx*j] = partial_x;
-            grad_field_y[i+config.nx*j] = partial_y;
+            grad_field_x[i+config.nx*j] = -partial_x;
+            grad_field_y[i+config.nx*j] = -partial_y;
         }
     }
     std::vector<std::vector<double>> grad_field = {grad_field_x, grad_field_y};

@@ -26,10 +26,10 @@ main.x: $(DEPENDENCIES)
 	@echo -e 'Done!\n'
 
 plot:
-	@python3 settings/plot_maps.py
+	@python3 settings/plot.py
 
 clean:
-	@rm -rf *.x results/*.txt results/*.pdf
+	@rm -rf *.x results/*.txt results/*.pdf results/*.dat
 
 oclean:
 	@rm -rf .objects/*.o

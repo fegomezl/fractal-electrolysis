@@ -1,30 +1,26 @@
 #include "header.h"
 
 template<typename T>
-void print_array(const Config &config, const std::vector<T> &array, const std::string name = "results/data.dat"); 
+void print_field(const Config &config, const std::vector<T> &field, const std::string name = "results/data.dat"); 
+void print_particles(const Config &config, const std::vector<double> &particles, const std::string name = "results/data.dat"); 
 
 int main (int argc, char **argv){
 
     Config config;
-    using std::chrono::high_resolution_clock;
-    using std::chrono::duration_cast;
-    using std::chrono::duration;
-    using std::chrono::milliseconds;
-
-
     std::vector<bool> boundary(config.N);
     std::vector<double> phi(config.N);
     std::vector<double> particles;
 
     initialization(config, boundary, particles, phi);
-
     relaxation(config, boundary, phi);
     auto gradient = get_gradient(config, phi);
 
-    print_array(config, phi, "results/phi.dat");
-    print_array(config, boundary, "results/boundary.dat");
-    print_array(config, gradient[0], "results/gradientx.dat");
-    print_array(config, gradient[1], "results/gradienty.dat");
+    print_field(config, boundary, "results/boundary.dat");
+    print_particles(config, particles, "results/particles.dat");
+
+    print_field(config, phi, "results/phi.dat");
+    print_field(config, gradient[0], "results/gradientx.dat");
+    print_field(config, gradient[1], "results/gradienty.dat");
 
     std::cout << "nx: " << config.nx << " ny: " << config.ny << "\n";
     std::cout << "N: " << config.N << "\n";
@@ -33,17 +29,33 @@ int main (int argc, char **argv){
 }
 
 template<typename T>
-void print_array(const Config &config, const std::vector<T> &array, const std::string name){   
+void print_field(const Config &config, const std::vector<T> &field, const std::string name){   
+    
     /****
-     * Print values of array in each position.
+     * Print values of field in each position.
      ****/ 
+
     std::ofstream fout;
     fout.open(name);
-    for (int j = 0; j < config.ny; ++j)
-        for (int i = 0; i < config.nx; ++i){   
-            double x = i*config.lx;
-            double y = j*config.ly;
-            fout << x << "\t" << y << "\t" << array[i+config.nx*j] << "\n";
-        }
+
+    //Internal values
+    for(int ii = 0; ii < config.N; ii++)
+        fout << field[ii] << "\n";
+
+    fout.close();
+}
+
+void print_particles(const Config &config, const std::vector<double> &particles, const std::string name){ 
+    
+    /****
+     * Print position of particles.
+     ****/ 
+
+    std::ofstream fout;
+    fout.open(name);
+
+    for (long unsigned int ii = 0; ii < particles.size()/2; ii++)
+        fout << particles[ii] << "\t" << particles[ii+1] << "\n";
+
     fout.close();
 }
