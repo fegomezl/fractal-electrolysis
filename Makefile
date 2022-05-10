@@ -1,7 +1,7 @@
 #Compiling parameters
 PROCCESORS = 4
 CXX = g++ #mpic++
-FLAGS = -std=c++11 -O3
+FLAGS = -std=c++11 -Wall #-O3
 RUN = ./#mpirun -np $(PROCCESORS) ./
 SOURCES = $(wildcard code/*.cpp)
 DEPENDENCIES = $(SOURCES:code/%.cpp=.objects/%.o)

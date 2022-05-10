@@ -11,7 +11,7 @@ int int_pow(int base, unsigned int exponent){
 
 Config::Config(){
     base = 3;
-    refinements = 3;
+    refinements = 4;
 
     Lx = 15.;
     Ly = 15.;
@@ -24,16 +24,16 @@ Config::Config(){
 
     max_iter_relax = 10000;
     alpha_relax = 1.0;
-    res_relax = 1e-6;
+    res_relax = 1e-8;
 
-    nx = int_pow(base, refinements);
-    ny = int_pow(base, refinements);
+    nx = int_pow(base, refinements); 
+    ny = int_pow(base, refinements); 
     N = nx*ny;
-    lx = Lx/nx;
+    lx = Lx/nx; 
     ly = Ly/ny;
 }
 
-void initialization(Config config, vector<double> &phi, vector<int> &boundary, vector<int> &dissociation){
+void initialization(Config config, std::vector<double> &phi, std::vector<int> &boundary, std::vector<int> &dissociation){
 
     /****
      * Initialization of electric potentiall, boundary 
@@ -53,7 +53,8 @@ void initialization(Config config, vector<double> &phi, vector<int> &boundary, v
             boundary[ii] = 0;
             dissociation[ii] = 0;
         } else {
-            phi[ii] = config.V*log(r/config.Rint)/log(config.Rext/config.Rint); 
+            phi[ii] = config.V*log(r/config.Rint)/log(config.Rext/config.Rint);
+            //phi[ii] = (rand() % 7)-3; 
             boundary[ii] = 1;
             dissociation[ii] = (phi[ii] > config.V_dis) ? 1 : 0;
         }

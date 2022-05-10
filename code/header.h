@@ -6,12 +6,10 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+//using namespace std;
 
 struct Config{
-
     Config();
-
     int base;
     int refinements;
 
@@ -35,7 +33,6 @@ struct Config{
     double res_relax;
 };
 
-extern void initialization(Config config, vector<double> &phi, vector<int> &boundary, vector<int> &dissociation);
-
-extern void relaxation(Config config, vector<double> &phi, vector<int> boundary, bool verbose=false);
-extern vector<vector<double>> get_gradient(Config config, vector<double> &phi);
+void initialization(Config config, std::vector<double> &phi, std::vector<int> &boundary, std::vector<int> &dissociation);
+void relaxation(Config config, std::vector<double> &phi, const std::vector<int> &boundary, bool verbose=false);
+std::vector<std::vector<double>> get_gradient(Config config, std::vector<double> &phi);

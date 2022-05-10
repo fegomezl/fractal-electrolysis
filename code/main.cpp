@@ -1,15 +1,15 @@
 #include "header.h"
 
 template<typename T>
-void print_array(Config config, vector<T> array, string name = "results/data.dat"); 
+void print_array(Config config, const std::vector<T> &array, std::string name = "results/data.dat"); 
 
 int main (int argc, char **argv){
 
     Config config;
 
-    vector<double> phi(config.N);
-    vector<int> boundary(config.N);
-    vector<int> dissociation(config.N);
+    std::vector<double> phi(config.N);
+    std::vector<int> boundary(config.N);
+    std::vector<int> dissociation(config.N);
 
     initialization(config, phi, boundary, dissociation);
 
@@ -23,24 +23,23 @@ int main (int argc, char **argv){
     print_array(config, gradient[1], "results/gradienty.txt");
 
     std::cout << "nx: " << config.nx << " ny: " << config.ny << "\n";
+    std::cout << "N: " << config.N << "\n";
 
     return 0;
 }
 
 template<typename T>
-void print_array(Config config, vector<T> array, string name){   
-
+void print_array(Config config, const std::vector<T> &array, std::string name){   
     /****
      * Print values of array in each position.
      ****/ 
-    ofstream fout;
+    std::ofstream fout;
     fout.open(name);
-    for(int ii = 0; ii < config.N; ii++){
-        double x = (ii%config.nx-(config.nx-1)/2)*config.lx;
-        double y = (ii/config.nx-(config.ny-1)/2)*config.ly;
-        double r = sqrt(x*x+y*y);
-
-        fout << x << "\t" << y << "\t" << array[ii] << "\n";
-    }
+    for (int j = 0; j < config.ny; ++j)
+        for (int i = 0; i < config.nx; ++i){   
+            double x = i*config.lx;
+            double y = j*config.ly;
+            fout << x << "\t" << y << "\t" << array[i+config.nx*j] << "\n";
+        }
     fout.close();
 }

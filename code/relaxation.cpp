@@ -1,27 +1,28 @@
 #include "header.h"
 
-void relaxation(Config config, vector<double> &phi, vector<int> boundary, bool verbose){
-    int i,j,iter,t;
-    auto phi_new = phi;
+void relaxation(Config config, std::vector<double> &phi, const std::vector<int> &boundary, bool verbose){
+    int i,j,iter;
+    std::vector<double> phi_new(config.N);
+    phi_new = phi;
     double R=0.0;
     double TotalRes=0.0;
 
-
+    //array[j][i] -> array[i+nx*j] j->y, i->x
     for (iter = 0; iter < config.max_iter_relax; ++iter)
     {
         TotalRes=0.0;
-        for (i = 0; i < config.nx; ++i)
+        for (j = 0; j < config.ny; ++j)
         {
-            for (j = 1; j < config.ny-1; ++j){   
-                //Left colum
-                if(i ==0){
-                    R = boundary[config.nx*j]*(4*phi[config.nx*j]-phi[config.nx*(j+1)]-phi[config.nx*(j-1)]-phi[1+config.nx*j]-config.V);
-                    phi_new[config.nx*j] = phi[config.nx*j]-config.alpha_relax*R*0.25;
+            for (i = 1; i < config.nx-1; ++i){  
+                //Bottom row
+                if(j==0){
+                    R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j+1)]-phi[(i+1)+config.nx*j]-phi[(i-1)+config.nx*j]-config.V);
+                    phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
                     TotalRes+=abs(R);
                 }
-                //Right colum
-                else if(i==config.ny-1){
-                    R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j+1)]-phi[i+config.nx*(j-1)]-phi[(i-1)+config.nx*j]-config.V);
+                //Top row
+                else if(j==config.ny-1){
+                    R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j-1)]-phi[(i+1)+config.nx*j]-phi[(i-1)+config.nx*j]-config.V);
                     phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
                     TotalRes+=abs(R);
                 }
@@ -32,44 +33,42 @@ void relaxation(Config config, vector<double> &phi, vector<int> boundary, bool v
                     TotalRes+=abs(R);
                 }
             }
-
-            //left corners
-            if(i == 0){
-                //bottom j=0
-                R = boundary[0]*(4*phi[0]-phi[config.nx]-phi[1]-2*config.V);
-                phi_new[0] = phi[0]-config.alpha_relax*R*0.25;
+            //Bottom Corners
+            if(j==0){
+                i=0;
+                R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j+1)]-phi[(i+1)+config.nx*j]-2*config.V);
+                phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
                 TotalRes+=abs(R);
-                //top
-                t = config.ny-1; //j
-                R = boundary[config.nx*t]*(4*phi[config.nx*t]-phi[config.nx*(t-1)]-phi[1+config.nx*t]-2*config.V);
-                phi_new[config.nx*t] = phi[config.nx*t]-config.alpha_relax*R*0.25;
+                i=config.nx-1;
+                R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j+1)]-phi[(i-1)+config.nx*j]-2*config.V);
+                phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
                 TotalRes+=abs(R);
             }
-            //right corners
-            else if (i == config.nx-1){
-                //bottom j=0
-                R = boundary[i]*(4*phi[i]-phi[i+config.nx]-phi[i-1]-2*config.V);
-                phi_new[i] = phi[i]-config.alpha_relax*R*0.25;
+            //Top Corners
+            else if(j==config.ny-1){
+                i=0;
+                R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j-1)]-phi[(i+1)+config.nx*j]-2*config.V);
+                phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
                 TotalRes+=abs(R);
-                //top
-                t = config.ny-1; //j
-                R = boundary[i+config.nx*t]*(4*phi[i+config.nx*t]-phi[i+config.nx*(t-1)]-phi[(i-1)+config.nx*t]-2*config.V);
-                phi_new[i+config.nx*t] = phi[i+config.nx*t]-config.alpha_relax*R*0.25;
+                i=config.nx-1;
+                R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j-1)]-phi[(i-1)+config.nx*j]-2*config.V);
+                phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
                 TotalRes+=abs(R);
             }
+            //Left and Right colums
             else{
-                //Bottom row j=0
-                R = boundary[i]*(4*phi[i]-phi[i+config.nx]-phi[i+1]-phi[i-1]-config.V);
-                phi_new[i] = phi[i]-config.alpha_relax*R*0.25;
+                //Left
+                i=0;
+                R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j+1)]-phi[i+config.nx*(j-1)]-phi[(i+1)+config.nx*j]-config.V);
+                phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
                 TotalRes+=abs(R);
-                //Top row
-                t = config.ny-1; //j
-                R = boundary[i+config.nx*t]*(4*phi[i+config.nx*t]-phi[i+config.nx*(t-1)]-phi[(i+1)+config.nx*t]-phi[(i-1)+config.nx*t]-config.V);
-                phi_new[i+config.nx*t] = phi[i+config.nx*t]-config.alpha_relax*R*0.25;
+                //Right
+                i=config.nx-1;
+                R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j+1)]-phi[i+config.nx*(j-1)]-phi[(i-1)+config.nx*j]-config.V);
+                phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
                 TotalRes+=abs(R);
             }
         }
-
         //Check if method Converged
         if (TotalRes<config.res_relax)
         {
@@ -88,29 +87,28 @@ void relaxation(Config config, vector<double> &phi, vector<int> boundary, bool v
 
 }
 
-
-vector<vector<double>> get_gradient(Config config, vector<double> &phi)
+std::vector<std::vector<double>> get_gradient(Config config, std::vector<double> &phi)
 {   
     //size of the grid
-    int i,j,t;
-    vector<double> grad_field_x(config.N);
-    vector<double> grad_field_y(config.N);
-    double partial_x,partial_y;
+    int i,j;
+    std::vector<double> grad_field_x(config.N);
+    std::vector<double> grad_field_y(config.N);
+    double partial_x=0, partial_y=0;
 
-    for (i = 0; i < config.nx; ++i)
+    for (j = 0; j < config.ny; ++j)
     {
-        for (j = 1; j < config.ny-1; ++j){   
-            //Left colum
-            if(i ==0){
-                partial_x = (phi[1+config.nx*j]-phi[config.nx*j])/(config.lx); //forward deriv
-                partial_y = (phi[config.nx*(j+1)]-phi[config.nx*(j-1)])/(2*config.ly); //center deriv
-                grad_field_x[config.nx*j] = partial_x;
-                grad_field_y[config.nx*j] = partial_y;
+        for (i = 1; i < config.nx-1; ++i){  
+            //Bottom row
+            if(j==0){
+                partial_x = (phi[i+1+config.nx*j]-phi[i-1+config.nx*j])/(2*config.lx); //center deriv
+                partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*j])/(config.ly); //forward deriv
+                grad_field_x[i+config.nx*j] = partial_x;
+                grad_field_y[i+config.nx*j] = partial_y;
             }
-            //Right colum
-            else if(i==config.ny-1){
-                partial_x = (phi[i+config.nx*j]-phi[i-1+config.nx*j])/(config.lx); //backward deriv
-                partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*(j-1)])/(2*config.ly); //center deriv
+            //Top row
+            else if(j==config.ny-1){
+                partial_x = (phi[i+1+config.nx*j]-phi[i-1+config.nx*j])/(2*config.lx); //center deriv
+                partial_y = (phi[i+config.nx*j]-phi[i+config.nx*(j-1)])/(config.ly); //backward deriv
                 grad_field_x[i+config.nx*j] = partial_x;
                 grad_field_y[i+config.nx*j] = partial_y;
             }
@@ -122,49 +120,49 @@ vector<vector<double>> get_gradient(Config config, vector<double> &phi)
                 grad_field_y[i+config.nx*j] = partial_y;
             }
         }
-
-        //left corners
-        if(i == 0){
-            //bottom j=0
-            partial_x = (phi[1]-phi[0])/(config.lx); //forward deriv
-            partial_y = (phi[config.nx]-phi[0])/(config.ly); //forward deriv
-            grad_field_x[0] = partial_x;
-            grad_field_y[0] = partial_y;
-            //top
-            t = config.ny-1; //j
-            partial_x = (phi[1+config.nx*t]-phi[config.nx*t])/(config.lx); //forward deriv
-            partial_y = (phi[config.nx*t]-phi[config.nx*(t-1)])/(config.ly); //backward deriv
-            grad_field_x[config.nx*t] = partial_x;
-            grad_field_y[config.nx*t] = partial_y;
+        //Bottom Corners
+        if(j==0){
+            i=0;
+            partial_x = (phi[i+1+config.nx*j]-phi[i+config.nx*j])/(config.lx); //forward deriv
+            partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*j])/(config.ly); //forward deriv
+            grad_field_x[i+config.nx*j] = partial_x;
+            grad_field_y[i+config.nx*j] = partial_y;
+            i=config.nx-1;
+            partial_x = (phi[i+config.nx*j]-phi[i-1+config.nx*j])/(config.lx); //backward deriv
+            partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*j])/(config.ly); //forward deriv
+            grad_field_x[i+config.nx*j] = partial_x;
+            grad_field_y[i+config.nx*j] = partial_y;
         }
-        //right corners
-        else if (i == config.nx-1){
-            //bottom j=0
-            partial_x = (phi[i]-phi[i-1])/(config.lx); //backward deriv
-            partial_y = (phi[i+config.nx]-phi[i])/(config.ly); //forward deriv
-            grad_field_x[i] = partial_x;
-            grad_field_y[i] = partial_y;
-            //top
-            t = config.ny-1; //j
-            partial_x = (phi[i+config.nx*t]-phi[i-1+config.nx*t])/(config.lx); //backward deriv
-            partial_y = (phi[i+config.nx*t]-phi[i+config.nx*(t-1)])/(config.ly); //backward deriv
-            grad_field_x[i+config.nx*t] = partial_x;
-            grad_field_y[i+config.nx*t] = partial_y;
+        //Top Corners
+        else if(j==config.ny-1){
+            i=0;
+            partial_x = (phi[i+1+config.nx*j]-phi[i+config.nx*j])/(config.lx); //forward deriv
+            partial_y = (phi[i+config.nx*j]-phi[i+config.nx*(j-1)])/(config.ly); //backward deriv
+            grad_field_x[i+config.nx*j] = partial_x;
+            grad_field_y[i+config.nx*j] = partial_y;
+            i=config.nx-1;
+            partial_x = (phi[i+config.nx*j]-phi[i-1+config.nx*j])/(config.lx); //backward deriv
+            partial_y = (phi[i+config.nx*j]-phi[i+config.nx*(j-1)])/(config.ly); //backward deriv
+            grad_field_x[i+config.nx*j] = partial_x;
+            grad_field_y[i+config.nx*j] = partial_y;
         }
+        //Left and Right colums
         else{
-            //Bottom row j=0
-            partial_x = (phi[i+1]-phi[i-1])/(2*config.lx); //center deriv
-            partial_y = (phi[i+config.nx]-phi[i])/(config.ly); //forward deriv
-            grad_field_x[i] = partial_x;
-            grad_field_y[i] = partial_y;
-            //Top row
-            t = config.ny-1; //j
-            partial_x = (phi[i+1+config.nx*t]-phi[i-1+config.nx*t])/(2*config.lx); //center deriv
-            partial_y = (phi[i+config.nx*t]-phi[i+config.nx*(t-1)])/(config.ly); //backward deriv
-            grad_field_x[i+config.nx*t] = partial_x;
-            grad_field_y[i+config.nx*t] = partial_y;
+            //Left
+            i=0;
+            partial_x = (phi[i+1+config.nx*j]-phi[i+config.nx*j])/(config.lx); //forward deriv
+            partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*(j-1)])/(2*config.ly); //center deriv
+            grad_field_x[i+config.nx*j] = partial_x;
+            grad_field_y[i+config.nx*j] = partial_y;
+            //Right
+            i=config.nx-1;
+            partial_x = (phi[i+config.nx*j]-phi[i-1+config.nx*j])/(config.lx); //backward deriv
+            partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*(j-1)])/(2*config.ly); //center deriv
+            grad_field_x[i+config.nx*j] = partial_x;
+            grad_field_y[i+config.nx*j] = partial_y;
         }
     }
-    vector<vector<double>> grad_field = {grad_field_x,grad_field_x};
+
+    std::vector<std::vector<double>> grad_field = {grad_field_x, grad_field_y};
     return grad_field;
 }
