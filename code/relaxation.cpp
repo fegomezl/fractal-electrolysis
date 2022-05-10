@@ -89,7 +89,7 @@ void relaxation(Config config, std::vector<double> &phi, const std::vector<int> 
         std::cout << "Relaxation dint converge after " << iter << " steps. Residue: "<< TotalRes <<"\n";
 
 }
-std::vector<std::vector<double>> get_gradient(Config config, std::vector<double> &phi)
+std::tuple<std::vector<double>, std::vector<double>> get_gradient(Config config, std::vector<double> &phi)
 {   
     //size of the grid
     int i,j;
@@ -168,6 +168,6 @@ std::vector<std::vector<double>> get_gradient(Config config, std::vector<double>
             grad_field_y[i+config.nx*j] = partial_y;
         }
     }
-    std::vector<std::vector<double>> grad_field = {grad_field_x, grad_field_y};
-    return grad_field;
+    //std::vector<std::vector<double>> grad_field = {grad_field_x, grad_field_y};
+    return {grad_field_x, grad_field_y};
 }

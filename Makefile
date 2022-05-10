@@ -2,7 +2,7 @@
 PROCCESORS = 4
 CXX = g++ #mpic++
 FLAGS = -std=c++11 -O3 -Wall #-g -fsanitize=address -fsanitize=leak -fsanitize=undefined
-RUN = time ./#mpirun -np $(PROCCESORS) ./
+RUN = ./#mpirun -np $(PROCCESORS) ./
 SOURCES = $(wildcard code/*.cpp)
 DEPENDENCIES = $(SOURCES:code/%.cpp=.objects/%.o)
 

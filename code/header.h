@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <tuple>
+#include <chrono>
 
 //using namespace std;
 
@@ -35,4 +37,4 @@ struct Config{
 
 void initialization(Config config, std::vector<double> &phi, std::vector<int> &boundary, std::vector<int> &dissociation);
 void relaxation(Config config, std::vector<double> &phi, const std::vector<int> &boundary, bool verbose=false);
-std::vector<std::vector<double>> get_gradient(Config config, std::vector<double> &phi);
+std::tuple<std::vector<double>, std::vector<double>> get_gradient(Config config, std::vector<double> &phi);
