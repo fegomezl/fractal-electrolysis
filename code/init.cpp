@@ -11,7 +11,7 @@ int int_pow(int base, unsigned int exponent){
 
 Config::Config(){
     base = 3;
-    refinements = 5;
+    refinements = 6;
 
     Lx = 15.;
     Ly = 15.;

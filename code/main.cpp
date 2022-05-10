@@ -6,6 +6,11 @@ void print_array(const Config &config, const std::vector<T> &array, const std::s
 int main (int argc, char **argv){
 
     Config config;
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
+
 
     std::vector<bool> boundary(config.N);
     std::vector<double> phi(config.N);
@@ -16,10 +21,10 @@ int main (int argc, char **argv){
     relaxation(config, boundary, phi);
     auto gradient = get_gradient(config, phi);
 
-    print_array(config, phi, "results/phi.txt");
-    print_array(config, boundary, "results/boundary.txt");
-    print_array(config, gradient[0], "results/gradientx.txt");
-    print_array(config, gradient[1], "results/gradienty.txt");
+    print_array(config, phi, "results/phi.dat");
+    print_array(config, boundary, "results/boundary.dat");
+    print_array(config, gradient[0], "results/gradientx.dat");
+    print_array(config, gradient[1], "results/gradienty.dat");
 
     std::cout << "nx: " << config.nx << " ny: " << config.ny << "\n";
     std::cout << "N: " << config.N << "\n";
