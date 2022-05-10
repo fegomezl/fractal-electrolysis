@@ -55,7 +55,7 @@ void print_particles(const Config &config, const std::vector<double> &particles,
     fout.open(name);
 
     for (long unsigned int ii = 0; ii < particles.size()/2; ii++)
-        fout << particles[ii] << "\t" << particles[ii+1] << "\n";
+        fout << particles[2*ii] << "\t" << particles[2*ii+1] << "\n";
 
     fout.close();
 }
