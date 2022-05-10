@@ -9,9 +9,6 @@ z = data[:,2]
 data=np.loadtxt('results/boundary.txt')
 zz = data[:,2]
 
-data=np.loadtxt('results/dissociation.txt')
-zzz = data[:,2]
-
 gradx=np.loadtxt('results/gradientx.txt')[:,2]
 grady=np.loadtxt('results/gradienty.txt')[:,2]
 
@@ -33,12 +30,6 @@ plt.show()
 
 plt.imshow(zz.reshape(ny,nx))
 plt.title('Boundary')
-plt.xlabel('x')
-plt.ylabel('y')
-plt.show()
-
-plt.imshow(zzz.reshape(ny,nx))
-plt.title('Dissociation')
 plt.xlabel('x')
 plt.ylabel('y')
 plt.show()

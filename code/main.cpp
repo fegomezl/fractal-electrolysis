@@ -1,24 +1,23 @@
 #include "header.h"
 
 template<typename T>
-void print_array(Config config, const std::vector<T> &array, std::string name = "results/data.dat"); 
+void print_array(const Config &config, const std::vector<T> &array, const std::string name = "results/data.dat"); 
 
 int main (int argc, char **argv){
 
     Config config;
 
+    std::vector<bool> boundary(config.N);
     std::vector<double> phi(config.N);
-    std::vector<int> boundary(config.N);
-    std::vector<int> dissociation(config.N);
+    std::vector<double> particles;
 
-    initialization(config, phi, boundary, dissociation);
+    initialization(config, boundary, particles, phi);
 
-    relaxation(config, phi, boundary);
-    auto gradient = get_gradient(config,phi);
+    relaxation(config, boundary, phi);
+    auto gradient = get_gradient(config, phi);
 
     print_array(config, phi, "results/phi.txt");
     print_array(config, boundary, "results/boundary.txt");
-    print_array(config, dissociation, "results/dissociation.txt");
     print_array(config, gradient[0], "results/gradientx.txt");
     print_array(config, gradient[1], "results/gradienty.txt");
 
@@ -29,7 +28,7 @@ int main (int argc, char **argv){
 }
 
 template<typename T>
-void print_array(Config config, const std::vector<T> &array, std::string name){   
+void print_array(const Config &config, const std::vector<T> &array, const std::string name){   
     /****
      * Print values of array in each position.
      ****/ 

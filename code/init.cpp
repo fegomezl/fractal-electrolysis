@@ -26,6 +26,10 @@ Config::Config(){
     alpha_relax = 1.0;
     res_relax = 1e-8;
 
+    molar_volume = 0.04;
+    molarity = 1.;
+    M = 0;
+
     nx = int_pow(base, refinements); 
     ny = int_pow(base, refinements); 
     N = nx*ny;
@@ -33,11 +37,11 @@ Config::Config(){
     ly = Ly/ny;
 }
 
-void initialization(Config config, std::vector<double> &phi, std::vector<int> &boundary, std::vector<int> &dissociation){
+void initialization(const Config &config, std::vector<bool> &boundary, std::vector<double> &particles, std::vector<double> &phi){
 
     /****
-     * Initialization of electric potentiall, boundary 
-     * conditions and dissociation probability.
+     * Initialization of electric potential and boundary 
+     * conditions.
      ****/ 
     for(int ii = 0; ii < config.N; ii++){
         double x = (ii%config.nx-(config.nx-1)/2)*config.lx;
@@ -47,16 +51,12 @@ void initialization(Config config, std::vector<double> &phi, std::vector<int> &b
         if (r <= config.Rint) {
             phi[ii] = 0.;
             boundary[ii] = 0;
-            dissociation[ii] = 0;
         } else if (r >= config.Rext) {
             phi[ii] = 1.;
             boundary[ii] = 0;
-            dissociation[ii] = 0;
         } else {
             phi[ii] = config.V*log(r/config.Rint)/log(config.Rext/config.Rint);
-            //phi[ii] = (rand() % 7)-3; 
             boundary[ii] = 1;
-            dissociation[ii] = (phi[ii] > config.V_dis) ? 1 : 0;
         }
     }
 }
