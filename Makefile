@@ -1,8 +1,8 @@
 #Compiling parameters
 PROCCESORS = 4
 CXX = g++ #mpic++
-FLAGS = -std=c++11 -Wall #-O3
-RUN = ./#mpirun -np $(PROCCESORS) ./
+FLAGS = -std=c++11 -O3 -Wall #-g -fsanitize=address -fsanitize=leak -fsanitize=undefined
+RUN = time ./#mpirun -np $(PROCCESORS) ./
 SOURCES = $(wildcard code/*.cpp)
 DEPENDENCIES = $(SOURCES:code/%.cpp=.objects/%.o)
 
@@ -26,7 +26,7 @@ main.x: $(DEPENDENCIES)
 	@echo -e 'Done!\n'
 
 plot:
-	python3 settings/plot_maps.py
+	@python3 settings/plot_maps.py
 
 clean:
 	@rm -rf *.x results/*.txt results/*.pdf

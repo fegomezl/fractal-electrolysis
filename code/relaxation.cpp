@@ -35,10 +35,12 @@ void relaxation(Config config, std::vector<double> &phi, const std::vector<int> 
             }
             //Bottom Corners
             if(j==0){
+                //left
                 i=0;
                 R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j+1)]-phi[(i+1)+config.nx*j]-2*config.V);
                 phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
                 TotalRes+=abs(R);
+                //right
                 i=config.nx-1;
                 R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j+1)]-phi[(i-1)+config.nx*j]-2*config.V);
                 phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
@@ -46,10 +48,12 @@ void relaxation(Config config, std::vector<double> &phi, const std::vector<int> 
             }
             //Top Corners
             else if(j==config.ny-1){
+                //left
                 i=0;
                 R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j-1)]-phi[(i+1)+config.nx*j]-2*config.V);
                 phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
                 TotalRes+=abs(R);
+                //right
                 i=config.nx-1;
                 R = boundary[i+config.nx*j]*(4*phi[i+config.nx*j]-phi[i+config.nx*(j-1)]-phi[(i-1)+config.nx*j]-2*config.V);
                 phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
@@ -81,12 +85,10 @@ void relaxation(Config config, std::vector<double> &phi, const std::vector<int> 
     
         phi = phi_new;
     }
-
     if(iter==config.max_iter_relax)
         std::cout << "Relaxation dint converge after " << iter << " steps. Residue: "<< TotalRes <<"\n";
 
 }
-
 std::vector<std::vector<double>> get_gradient(Config config, std::vector<double> &phi)
 {   
     //size of the grid
@@ -122,11 +124,13 @@ std::vector<std::vector<double>> get_gradient(Config config, std::vector<double>
         }
         //Bottom Corners
         if(j==0){
+            //left
             i=0;
             partial_x = (phi[i+1+config.nx*j]-phi[i+config.nx*j])/(config.lx); //forward deriv
             partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*j])/(config.ly); //forward deriv
             grad_field_x[i+config.nx*j] = partial_x;
             grad_field_y[i+config.nx*j] = partial_y;
+            //right
             i=config.nx-1;
             partial_x = (phi[i+config.nx*j]-phi[i-1+config.nx*j])/(config.lx); //backward deriv
             partial_y = (phi[i+config.nx*(j+1)]-phi[i+config.nx*j])/(config.ly); //forward deriv
@@ -135,11 +139,13 @@ std::vector<std::vector<double>> get_gradient(Config config, std::vector<double>
         }
         //Top Corners
         else if(j==config.ny-1){
+            //left
             i=0;
             partial_x = (phi[i+1+config.nx*j]-phi[i+config.nx*j])/(config.lx); //forward deriv
             partial_y = (phi[i+config.nx*j]-phi[i+config.nx*(j-1)])/(config.ly); //backward deriv
             grad_field_x[i+config.nx*j] = partial_x;
             grad_field_y[i+config.nx*j] = partial_y;
+            //right
             i=config.nx-1;
             partial_x = (phi[i+config.nx*j]-phi[i-1+config.nx*j])/(config.lx); //backward deriv
             partial_y = (phi[i+config.nx*j]-phi[i+config.nx*(j-1)])/(config.ly); //backward deriv
@@ -162,7 +168,6 @@ std::vector<std::vector<double>> get_gradient(Config config, std::vector<double>
             grad_field_y[i+config.nx*j] = partial_y;
         }
     }
-
     std::vector<std::vector<double>> grad_field = {grad_field_x, grad_field_y};
     return grad_field;
 }
