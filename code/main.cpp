@@ -14,12 +14,8 @@ int main (int argc, char **argv){
     relaxation(config, domain, phi);
     get_electric_field(config, phi, electric_field);
 
-    print_field(config, domain, "results/domain.dat");
+    print_fields(config, domain, phi, electric_field, "results/fields.dat");
     print_particles(config, particles, "results/particles.dat");
-
-    print_field(config, phi, "results/phi.dat");
-    print_field(config, electric_field[0], "results/electric_field_x.dat");
-    print_field(config, electric_field[1], "results/electric_field_y.dat");
 
     std::cout << "nx: " << config.nx << " ny: " << config.ny << "\n";
     std::cout << "N: " << config.N << "\n";

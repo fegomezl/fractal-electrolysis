@@ -1,9 +1,9 @@
 #include "header.h"
 
-void print_field(const Config &config, const std::vector<bool> &field, const std::string name){   
+void print_fields(const Config &config, const std::vector<bool> &domain, const std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::string name){
     
     /****
-     * print values of field in each position.
+     * Print values of field in each position.
      ****/ 
 
     std::ofstream fout;
@@ -11,23 +11,7 @@ void print_field(const Config &config, const std::vector<bool> &field, const std
 
     //internal values
     for(int ii = 0; ii < config.N; ii++)
-        fout << field[ii] << "\n";
-
-    fout.close();
-}
-
-void print_field(const Config &config, const std::vector<double> &field, const std::string name){   
-    
-    /****
-     * print values of field in each position.
-     ****/ 
-
-    std::ofstream fout;
-    fout.open(name);
-
-    //internal values
-    for(int ii = 0; ii < config.N; ii++)
-        fout << field[ii] << "\n";
+        fout << domain[ii] << "\t" << phi[ii] << "\t" << electric_field[0][ii] << "\t" << electric_field[1][ii] << "\n";
 
     fout.close();
 }
@@ -46,3 +30,4 @@ void print_particles(const Config &config, const std::vector<double> &particles,
 
     fout.close();
 }
+

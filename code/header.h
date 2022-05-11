@@ -77,6 +77,5 @@ class Crandom{
 void initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi);
 void relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, const bool verbose=false);
 void get_electric_field(const Config &config, const std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
-void print_field(const Config &config, const std::vector<bool> &field, const std::string name = "results/data.dat"); 
-void print_field(const Config &config, const std::vector<double> &field, const std::string name = "results/data.dat"); 
+void print_fields(const Config &config, const std::vector<bool> &domain, const std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::string name = "results/data.dat"); 
 void print_particles(const Config &config, const std::vector<double> &particles, const std::string name = "results/data.dat"); 
