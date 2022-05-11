@@ -9,6 +9,8 @@ Ly = 10.
 nx = 729
 ny = 729
 dt = 1.
+vis_iterations = 10
+dt = vis_iterations*dt
 
 #Grid
 x = np.linspace(-Lx/2, Lx/2, nx+1) 
