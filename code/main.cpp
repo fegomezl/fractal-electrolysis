@@ -1,9 +1,5 @@
 #include "header.h"
 
-template<typename T>
-void print_field(const Config &config, const std::vector<T> &field, const std::string name = "results/data.dat"); 
-void print_particles(const Config &config, const std::vector<double> &particles, const std::string name = "results/data.dat"); 
-
 int main (int argc, char **argv){
 
     Config config;
@@ -29,36 +25,4 @@ int main (int argc, char **argv){
     std::cout << "N: " << config.N << "\n";
 
     return 0;
-}
-
-template<typename T>
-void print_field(const Config &config, const std::vector<T> &field, const std::string name){   
-    
-    /****
-     * Print values of field in each position.
-     ****/ 
-
-    std::ofstream fout;
-    fout.open(name);
-
-    //Internal values
-    for(int ii = 0; ii < config.N; ii++)
-        fout << field[ii] << "\n";
-
-    fout.close();
-}
-
-void print_particles(const Config &config, const std::vector<double> &particles, const std::string name){ 
-    
-    /****
-     * Print position of particles.
-     ****/ 
-
-    std::ofstream fout;
-    fout.open(name);
-
-    for (long unsigned int ii = 0; ii < particles.size()/2; ii++)
-        fout << particles[2*ii] << "\t" << particles[2*ii+1] << "\n";
-
-    fout.close();
 }
