@@ -8,7 +8,7 @@ Config::Config(){
     Rint = 1.;
     Rext = 5.;
 
-    V = 1.;
+    V = 5.;
 
     max_iter_relax = 10000;
     alpha_relax = 1.0;
@@ -24,11 +24,11 @@ Config::Config(){
 
     double T_celsius = 20;
 
-    iterations = 180;
+    iterations = 500;
     vis_iterations = 10;
     dt = 1.;
     T = T_celsius + 273.15;
-    diffusivity = 1E-6;
+    diffusivity = 1E-5;
     oxidation = 2;
     electro_boltzmann = 1.160451E+4;
 

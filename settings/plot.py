@@ -62,16 +62,19 @@ fig.suptitle('t = '+str(n*dt)+' s')
 
 #Particles and domain
 ax = plt.subplot(gs[:-1, :])
+ax.set(xlim=(-Lx/2, Lx/2), ylim=(-Lx/2, Lx/2))
 plt.pcolormesh(X, Y, Domain, cmap = cm.binary_r) 
 plt.scatter(pos_x, pos_y, marker='o', s=1)
 
 #Electric potential
 ax = plt.subplot(gs[2, 0])
+ax.set(xlim=(-Lx/2, Lx/2), ylim=(-Lx/2, Lx/2))
 plt.pcolormesh(X, Y, Phi, cmap = cm.Blues) 
 plt.colorbar()
 
 #Electric field
 ax = plt.subplot(gs[2, 1])
+ax.set(xlim=(-Lx/2, Lx/2), ylim=(-Lx/2, Lx/2))
 plt.streamplot(U, V, Electric_field_x, Electric_field_y, linewidth=0.5, arrowsize=0.5)
 plt.pcolormesh(X, Y, Electric_field, cmap = cm.Reds)
 plt.colorbar()
