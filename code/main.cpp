@@ -7,20 +7,23 @@ void print_particles(const Config &config, const std::vector<double> &particles,
 int main (int argc, char **argv){
 
     Config config;
-    std::vector<bool> boundary(config.N);
-    std::vector<double> phi(config.N);
+    std::vector<bool> domain(config.N);
     std::vector<double> particles;
+    std::vector<double> phi(config.N);
+    std::vector<double> electric_field_x(config.N);
+    std::vector<double> electric_field_y(config.N);
+    std::vector<std::vector<double>> electric_field = {electric_field_x, electric_field_y};
 
-    initialization(config, boundary, particles, phi);
-    relaxation(config, boundary, phi);
-    auto gradient = get_gradient(config, phi);
+    initialization(config, domain, particles, phi);
+    relaxation(config, domain, phi);
+    get_electric_field(config, phi, electric_field);
 
-    print_field(config, boundary, "results/boundary.dat");
+    print_field(config, domain, "results/domain.dat");
     print_particles(config, particles, "results/particles.dat");
 
     print_field(config, phi, "results/phi.dat");
-    print_field(config, gradient[0], "results/gradientx.dat");
-    print_field(config, gradient[1], "results/gradienty.dat");
+    print_field(config, electric_field[0], "results/electric_field_x.dat");
+    print_field(config, electric_field[1], "results/electric_field_y.dat");
 
     std::cout << "nx: " << config.nx << " ny: " << config.ny << "\n";
     std::cout << "N: " << config.N << "\n";

@@ -74,6 +74,6 @@ class Crandom{
         }
 };
 
-void initialization(const Config &config, std::vector<bool> &boundary, std::vector<double> &phi, std::vector<double> &particles);
-void relaxation(const Config &config, const std::vector<bool> &boundary, std::vector<double> &phi, const bool verbose=false);
-std::vector<std::vector<double>> get_gradient(const Config &config, const std::vector<double> &phi);
+void initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi);
+void relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, const bool verbose=false);
+void get_electric_field(const Config &config, const std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);

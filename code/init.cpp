@@ -35,10 +35,10 @@ Config::Config(){
     mu = electro_boltzmann*oxidation*diffusivity*dt/T; 
 }
 
-void initialization(const Config &config, std::vector<bool> &boundary, std::vector<double> &particles, std::vector<double> &phi){
+void initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi){
 
     /****
-     * Initialization of electric potentiall, boundary 
+     * Initialization of electric potentiall, domain 
      * conditions and dissociation probability.
      ****/
     std::vector<int> dissociation;    
@@ -49,13 +49,13 @@ void initialization(const Config &config, std::vector<bool> &boundary, std::vect
 
         if (r <= config.Rint) {
             phi[ii] = 0.;
-            boundary[ii] = 0;
+            domain[ii] = 0;
         } else if (r >= config.Rext) {
             phi[ii] = config.V;
-            boundary[ii] = 0;
+            domain[ii] = 0;
         } else {
             phi[ii] = config.V*log(r/config.Rint)/log(config.Rext/config.Rint);
-            boundary[ii] = 1;
+            domain[ii] = 1;
             dissociation.push_back(ii);
         }
     }

@@ -19,7 +19,7 @@ v = np.linspace(-(Ly-Ly/ny)/2, (Ly-Ly/ny)/2, ny)
 U, V = np.meshgrid(u, v)
 
 #Particles and boundary
-z = np.loadtxt('results/boundary.dat')
+z = np.loadtxt('results/domain.dat')
 Z = np.reshape(z, (-1, nx))
 
 z = np.loadtxt('results/particles.dat')
@@ -52,8 +52,8 @@ cbar.set_label('V');
 plt.show()
 
 #Electric field
-zx = np.loadtxt('results/gradientx.dat')
-zy = np.loadtxt('results/gradienty.dat')
+zx = np.loadtxt('results/electric_field_x.dat')
+zy = np.loadtxt('results/electric_field_y.dat')
 Zx = np.reshape(zx, (-1, nx))
 Zy = np.reshape(zy, (-1, nx))
 
