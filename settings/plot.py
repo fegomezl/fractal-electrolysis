@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 import matplotlib.cm as cm
 
 #Parameters from the domain
@@ -53,32 +54,42 @@ Electric_field = np.reshape(electric_field, (-1, nx))
 pos_x = particles[:,0]
 pos_y = particles[:,1]
 
-#Particles and boundary
-plt.title('Particles and Electrodes (t = '+str(n*dt)+' s)')
+#Plot fields and particles
+fig = plt.figure(figsize=(10,10))
+gs = gridspec.GridSpec(3, 2)
+
+fig.suptitle('t = '+str(n*dt)+' s')
+
+#Particles and domain
+ax = plt.subplot(gs[:-1, :])
 plt.pcolormesh(X, Y, Domain, cmap = cm.binary_r) 
 plt.scatter(pos_x, pos_y, marker='o', s=1)
-plt.show()
 
 #Electric potential
-#2D
-plt.title('Electric potential (t = '+str(n*dt)+' s)')
+ax = plt.subplot(gs[2, 0])
 plt.pcolormesh(X, Y, Phi, cmap = cm.Blues) 
-cbar = plt.colorbar()
-cbar.set_label('V'); 
+plt.colorbar()
+
+#Electric field
+ax = plt.subplot(gs[2, 1])
+plt.streamplot(U, V, Electric_field_x, Electric_field_y, linewidth=0.5, arrowsize=0.5)
+plt.pcolormesh(X, Y, Electric_field, cmap = cm.Reds)
+plt.colorbar()
+
 plt.show()
-#3D
+
+try:
+    D3 = sys.argv[2]
+    if (D3 != '3d'):
+        exit()
+except:
+    exit()
+
+#3D Electric potential
 fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 ax.set_xlim([-Lx/2, Lx/2])
 ax.set_ylim([-Ly/2, Ly/2])
 surf=ax.plot_surface(U, V, Phi, cmap=cm.Blues)
 cbar = fig.colorbar(surf)
 cbar.set_label('V'); 
-plt.show()
-
-#Electric field
-plt.title('Electric field (t = '+str(n*dt)+' s)')
-plt.streamplot(U, V, Electric_field_x, Electric_field_y)
-plt.pcolormesh(X, Y, Electric_field, cmap = cm.Reds)
-cbar = plt.colorbar()
-cbar.set_label('V/cm'); 
 plt.show()
