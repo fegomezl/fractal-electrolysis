@@ -33,7 +33,8 @@ struct Config{
     int seed;
     
     double dt;
-    double t;
+    int iterations;
+    int vis_iterations;
     double diffusivity;
     int oxidation;
     double electro_boltzmann;
@@ -74,8 +75,8 @@ class Crandom{
         }
 };
 
-void initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi);
+void initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
 void relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, const bool verbose=false);
 void get_electric_field(const Config &config, const std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
-void print_fields(const Config &config, const std::vector<bool> &domain, const std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::string name = "results/data.dat"); 
-void print_particles(const Config &config, const std::vector<double> &particles, const std::string name = "results/data.dat"); 
+void print_fields(const Config &config, const std::vector<bool> &domain, const std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::string name = "results/data/fields.dat"); 
+void print_particles(const Config &config, const std::vector<double> &particles, const std::string name = "results/data/particles.dat"); 

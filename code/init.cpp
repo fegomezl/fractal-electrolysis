@@ -24,7 +24,8 @@ Config::Config(){
 
     double T_celsius = 20;
 
-    t = 180.;
+    iterations = 180;
+    vis_iterations = 10;
     dt = 1.;
     T = T_celsius + 273.15;
     diffusivity = 1E-6;
@@ -35,10 +36,10 @@ Config::Config(){
     mu = electro_boltzmann*oxidation*diffusivity*dt/T; 
 }
 
-void initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi){
+void initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field){
 
     /****
-     * Initialization of electric potentiall, domain 
+     * Initialization of electric potential, domain 
      * conditions and dissociation probability.
      ****/
     std::vector<int> dissociation;    
@@ -60,6 +61,10 @@ void initialization(const Config &config, std::vector<bool> &domain, std::vector
         }
     }
 
+    /****
+     * Random setting of particles in domain. The distribution is uniform
+     * along the free cells.
+     ****/
     Crandom random(config.seed);
     int N_sites = dissociation.size();
     int N_particles = config.particle_proportion*dissociation.size();
@@ -69,4 +74,9 @@ void initialization(const Config &config, std::vector<bool> &domain, std::vector
         particles.push_back((kk%config.nx-(config.nx-1)/2)*config.lx);
         particles.push_back((kk/config.nx-(config.ny-1)/2)*config.ly);
     }
+
+    /****
+     * Calculate initial electric field
+     ****/
+    get_electric_field(config, phi, electric_field);
 }

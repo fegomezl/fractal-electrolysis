@@ -76,7 +76,8 @@ void relaxation(const Config &config, const std::vector<bool> &domain, std::vect
         //Check if method Converged
         if (TotalRes<config.res_relax)
         {
-            std::cout << "Relaxation converged after " << iter << " steps. Residue: "<< TotalRes <<"\n";
+            if (verbose)
+                std::cout << "Relaxation converged after " << iter << " steps. Residue: "<< TotalRes <<"\n";
             break;
         }
 
@@ -85,7 +86,7 @@ void relaxation(const Config &config, const std::vector<bool> &domain, std::vect
     
         phi = phi_new;
     }
-    if(iter==config.max_iter_relax)
+    if(iter==config.max_iter_relax && verbose)
         std::cout << "Relaxation dint converge after " << iter << " steps. Residue: "<< TotalRes <<"\n";
 }
 

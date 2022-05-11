@@ -6,7 +6,13 @@ RUN = ./#mpirun -np $(PROCCESORS) ./
 SOURCES = $(wildcard code/*.cpp)
 DEPENDENCIES = $(SOURCES:code/%.cpp=.objects/%.o)
 
-.PHONY: all main clean oclean
+#Arguments for 'plot'
+ifeq (plot,$(firstword $(MAKECMDGOALS)))
+  PLOT_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(PLOT_ARGS):;@:)
+endif
+
+.PHONY: all main plot clean oclean
 
 all: main
 
@@ -26,10 +32,10 @@ main.x: $(DEPENDENCIES)
 	@echo -e 'Done!\n'
 
 plot:
-	@python3 settings/plot.py
+	@python3 settings/plot.py $(PLOT_ARGS)
 
 clean:
-	@rm -rf *.x results/*.txt results/*.pdf results/*.dat
+	@rm -rf *.x results/*.pdf results/data/*.dat
 
 oclean:
 	@rm -rf .objects/*.o
