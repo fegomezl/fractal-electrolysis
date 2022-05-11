@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
 #Parameters from the domain
-Lx = 16.
-Ly = 16.
+Lx = 10.
+Ly = 10.
 nx = 729
 ny = 729
 

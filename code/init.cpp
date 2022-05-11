@@ -1,26 +1,14 @@
 #include "header.h"
 
-int int_pow(int base, unsigned int exponent){
-  if (exponent == 0) return 1;
-  if (exponent == 1) return base;
-  
-  int results = int_pow(base, exponent/2);
-  if (exponent%2 == 0) return results*results;
-  else return base*results*results;
-}
-
 Config::Config(){
-    base = 3;
-    refinements = 6;
 
-    Lx = 16.;
-    Ly = 16.;
+    Lx = Ly = 10.;
+    nx = ny = 729; 
 
     Rint = 1.;
-    Rext = 6.;
+    Rext = 5.;
 
     V = 1.;
-    V_dis = 0.5;
 
     max_iter_relax = 10000;
     alpha_relax = 1.0;
@@ -29,12 +17,22 @@ Config::Config(){
     molar_volume = 0.04;
     molarity = 1.;
 
-    nx = int_pow(base, refinements); 
-    ny = int_pow(base, refinements); 
     N = nx*ny;
     lx = Lx/nx; 
     ly = Ly/ny;
     particle_proportion = molarity*molar_volume;
+
+    double T_celsius = 20;
+
+    t = 180.;
+    dt = 1.;
+    T = T_celsius + 273.15;
+    diffusivity = 1E-6;
+    oxidation = 2;
+    electro_boltzmann = 1.160451E+4;
+
+    sigma = sqrt(2*diffusivity*dt);
+    mu = electro_boltzmann*oxidation*diffusivity*dt/T; 
 }
 
 void initialization(const Config &config, std::vector<bool> &boundary, std::vector<double> &particles, std::vector<double> &phi){

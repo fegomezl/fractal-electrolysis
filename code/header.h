@@ -7,8 +7,6 @@
 
 struct Config{
     Config();
-    int base;
-    int refinements;
 
     int nx;
     int ny;
@@ -23,7 +21,6 @@ struct Config{
     double Rext;
 
     double V;
-    double V_dis;
 
     int max_iter_relax;
     double alpha_relax;
@@ -34,6 +31,16 @@ struct Config{
     double particle_proportion;
 
     int seed;
+    
+    double dt;
+    double t;
+    double diffusivity;
+    int oxidation;
+    double electro_boltzmann;
+    double T;
+
+    double sigma;
+    double mu;
 };
 
 class Crandom{
