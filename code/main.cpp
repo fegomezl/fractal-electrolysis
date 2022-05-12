@@ -45,6 +45,11 @@ int main (int argc, char **argv){
             print_fields(config, domain, phi, electric_field, "results/data/fields_"+std::to_string(ii/config.vis_iterations)+".dat");
             print_particles(config, particles, "results/data/particles_"+std::to_string(ii/config.vis_iterations)+".dat");
         }
+
+        if (particles.size() == 0){
+            std::cout << "No more particles.";
+            break;
+        }
     } 
 
     return 0;

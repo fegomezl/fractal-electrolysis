@@ -8,7 +8,9 @@ Config::Config(){
     Rint = 1.;
     Rext = 5.;
 
-    V = 5.;
+    V = 1.;
+
+    seed = 50;
 
     max_iter_relax = 10000;
     alpha_relax = 1.0;
@@ -24,8 +26,8 @@ Config::Config(){
 
     double T_celsius = 20;
 
-    iterations = 5000;
-    vis_iterations = 10;
+    iterations = 3600;
+    vis_iterations = 60;
     dt = 1.;
     T = T_celsius + 273.15;
     diffusivity = 0.733E-5;
