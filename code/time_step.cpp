@@ -32,6 +32,8 @@ void system_evolve(const Config &config, Crandom &random, std::vector<bool> &dom
         double Ex00 = 0., Ex01 = 0., Ex10 = 0., Ex11 = 0.;
         double Ey00 = 0., Ey01 = 0., Ey10 = 0., Ey11 = 0.;
 
+
+        //Estos 4 if son mas rapidos que los 2 if con 2 if dentro 
         if (abs(x0) <= (config.nx - 1)/2 && abs(y0) <= (config.ny - 1)/2){
             Ex00 = electric_field[0][x0+(config.nx-1)/2 + (y0+(config.ny-1)/2)*config.ny];
             Ey00 = electric_field[1][x0+(config.nx-1)/2 + (y0+(config.ny-1)/2)*config.ny];

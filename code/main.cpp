@@ -1,6 +1,10 @@
 #include "header.h"
 
 int main (int argc, char **argv){
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
 
     Config config;
     std::vector<bool> domain(config.N);
@@ -27,6 +31,7 @@ int main (int argc, char **argv){
               << std::left << std::setw(12)
               << "\n------------------------------------------------\n";
 
+    auto t1 = high_resolution_clock::now();
     for (int ii = 1; ii <= config.iterations; ii++){
 
         double percentage = 100*ii/config.iterations;
@@ -38,7 +43,7 @@ int main (int argc, char **argv){
         std::cout.flush();
 
         system_evolve(config, random, domain, particles, phi, electric_field);
-        relaxation(config, domain, phi,0);
+        relaxation(config, domain, phi);
         get_electric_field(config, phi, electric_field);
 
         if (ii%config.vis_iterations == 0){
@@ -51,18 +56,10 @@ int main (int argc, char **argv){
             break;
         }
     }
-
-    /*using std::chrono::high_resolution_clock;
-    using std::chrono::duration_cast;
-    using std::chrono::duration;
-    using std::chrono::milliseconds;
-
-    auto t1 = high_resolution_clock::now();
-    relaxation(config, domain, phi, 1);
     auto t2 = high_resolution_clock::now();
 
     duration<double, std::milli> ms_double = t2 - t1;
-    std::cout << "Execution time: " << ms_double.count() << "ms \n";*/
+    std::cout << "Execution time: " << ms_double.count()/1000.0 << "ms \n";
 
     return 0;
 }

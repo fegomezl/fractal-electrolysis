@@ -2,11 +2,11 @@
 
 Config::Config(){
 
-    Lx = Ly = 10.;
+    Lx = Ly = 9.;
     nx = ny = 729; 
 
-    Rint = 1.;
-    Rext = 5.;
+    Rint = 0.15;
+    Rext = 4.5;
 
     V = 1.;
 
@@ -14,7 +14,7 @@ Config::Config(){
 
     max_iter_relax = 10000;
     alpha_relax = 1.0;
-    res_relax = 1e-8;
+    res_relax = 1e-6;
 
     molar_volume = 0.04;
     molarity = 1.;
@@ -26,8 +26,8 @@ Config::Config(){
 
     double T_celsius = 20;
 
-    iterations = 3600;
-    vis_iterations = 60;
+    iterations = 3600*2;
+    vis_iterations = 120;
     dt = 1.;
     T = T_celsius + 273.15;
     diffusivity = 0.733E-5;
