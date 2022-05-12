@@ -1,6 +1,6 @@
 #include "header.h"
 
-void system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &particles, const std::vector<std::vector<double>> &electric_field){
+void system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field){
     /****
      * Move particles according to the Smoluchowski Diffusion Equation.
      *
@@ -18,6 +18,8 @@ void system_evolve(const Config &config, Crandom &random, std::vector<bool> &dom
      *  I00=(x0,y0)   I10=(x1,y0)
      *
      ****/ 
+
+    auto particles_old = particles;
 
     for(long unsigned int ii = 0; ii < particles.size()/2; ii++){
         double x = particles[2*ii]/config.lx;
@@ -74,15 +76,24 @@ void system_evolve(const Config &config, Crandom &random, std::vector<bool> &dom
             neighbors.push_back(x1+(config.nx-1)/2 + (y1+(config.ny-1)/2)*config.ny);        
 
         bool liquid = 1;
-        for (auto &ii : neighbors)
+        double V_new = 1.;
+        for (auto &ii : neighbors){
             liquid &= domain[ii];
+            V_new *= phi[ii];
+        }
 
         if (!liquid){
-            for (auto &ii : neighbors)
-                domain[ii] = 0;
-
-            particles.erase(particles.begin()+2*(ii-k), particles.begin()+2*(ii-k)+1);
-            k += 1;
+            if (V_new == 0) {
+                for (auto &ii : neighbors){
+                    domain[ii] = 0;
+                    phi[ii] = 0.;
+                }
+                particles.erase(particles.begin()+2*(ii-k), particles.begin()+2*(ii-k)+1);
+                k += 1;
+            } else {
+                particles[2*(ii-k)] = particles_old[2*ii];
+                particles[2*(ii-k)+1] = particles_old[2*ii+1];
+            }
         }
     }
 }

@@ -51,8 +51,12 @@ Electric_field_x = np.reshape(electric_field_x, (-1, nx))
 Electric_field_y = np.reshape(electric_field_y, (-1, nx))
 Electric_field = np.reshape(electric_field, (-1, nx))
 
-pos_x = particles[:,0]
-pos_y = particles[:,1]
+try:
+    pos_x = np.append(particles[:,0], [2*Lx])
+    pos_y = np.append(particles[:,1], [2*Ly])
+except:
+    pos_x = [2*Lx]
+    pos_y = [2*Ly]
 
 #Plot fields and particles
 fig = plt.figure(figsize=(10,10))

@@ -24,11 +24,11 @@ Config::Config(){
 
     double T_celsius = 20;
 
-    iterations = 500;
+    iterations = 5000;
     vis_iterations = 10;
     dt = 1.;
     T = T_celsius + 273.15;
-    diffusivity = 1E-5;
+    diffusivity = 0.733E-5;
     oxidation = 2;
     electro_boltzmann = 1.160451E+4;
 

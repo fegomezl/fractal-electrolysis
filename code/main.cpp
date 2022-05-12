@@ -37,7 +37,7 @@ int main (int argc, char **argv){
              << std::to_string((int)percentage)+"%" << "\r";
         std::cout.flush();
 
-        system_evolve(config, random, domain, particles, electric_field);
+        system_evolve(config, random, domain, particles, phi, electric_field);
         relaxation(config, domain, phi);
         get_electric_field(config, phi, electric_field);
 
