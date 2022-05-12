@@ -12,10 +12,12 @@ Ly = 10.
 nx = 729
 ny = 729
 dt = 1.
-vis_iterations = 30
+vis_iterations = 120
 dt = vis_iterations*dt
-frn = 240
-fps = 30
+frn = 60
+fps = 10
+interval = 10
+
 
 #Grid
 x = np.linspace(-Lx/2, Lx/2, nx+1) 
@@ -120,7 +122,7 @@ def animate(Iter):
     return quad1,scatter1,quad2,stream1.lines.remove(),quad3
 
 gs.tight_layout(fig)
-anim = animation.FuncAnimation(fig,animate,frames=frn,interval=1,blit=False,repeat=False)
+anim = animation.FuncAnimation(fig,animate,frames=frn,interval=interval,blit=False,repeat=False)
 anim.save('animation.gif', writer='imagemagick', fps=fps)
 
 #plt.show()
