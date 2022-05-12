@@ -34,6 +34,9 @@ main.x: $(DEPENDENCIES)
 plot:
 	@python3 settings/plot.py $(PLOT_ARGS)
 
+animation:
+	@python3 settings/animation.py
+
 clean:
 	@rm -rf *.x results/*.pdf results/data/*.dat
 
