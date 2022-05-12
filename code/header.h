@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include <omp.h>
 
 struct Config{
     Config();

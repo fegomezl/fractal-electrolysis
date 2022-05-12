@@ -6,8 +6,8 @@ int main (int argc, char **argv){
     std::vector<bool> domain(config.N);
     std::vector<double> particles;
     std::vector<double> phi(config.N);
-    std::vector<double> electric_field_x(config.N);
-    std::vector<double> electric_field_y(config.N);
+    std::vector<double> electric_field_x(config.N,0.0);
+    std::vector<double> electric_field_y(config.N,0.0);
     std::vector<std::vector<double>> electric_field = {electric_field_x, electric_field_y};
 
     initialization(config, domain, particles, phi, electric_field);
@@ -38,7 +38,7 @@ int main (int argc, char **argv){
         std::cout.flush();
 
         system_evolve(config, random, domain, particles, phi, electric_field);
-        relaxation(config, domain, phi);
+        relaxation(config, domain, phi,0);
         get_electric_field(config, phi, electric_field);
 
         if (ii%config.vis_iterations == 0){
@@ -50,7 +50,19 @@ int main (int argc, char **argv){
             std::cout << "No more particles.";
             break;
         }
-    } 
+    }
+
+    /*using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
+
+    auto t1 = high_resolution_clock::now();
+    relaxation(config, domain, phi, 1);
+    auto t2 = high_resolution_clock::now();
+
+    duration<double, std::milli> ms_double = t2 - t1;
+    std::cout << "Execution time: " << ms_double.count() << "ms \n";*/
 
     return 0;
 }
