@@ -68,6 +68,7 @@ int main (int argc, char **argv){
     duration<double, std::milli> ms_double = t2 - t1;
     std::cout << "Execution time: " << ms_double.count()/1000.0 << "ms \n";
 
+    //Esperar a la impresion del ultimo frame 
     aux1.get();
     aux2.get();
     return 0;
