@@ -10,7 +10,7 @@ Ly = 10.
 nx = 729
 ny = 729
 dt = 1.
-vis_iterations = 60
+vis_iterations = 120
 dt = vis_iterations*dt
 
 #Grid
