@@ -14,7 +14,7 @@ ny = 729
 dt = 1.
 vis_iterations = 120
 dt = vis_iterations*dt
-frn = 20
+frn = 60
 fps = 10
 interval = 10
 

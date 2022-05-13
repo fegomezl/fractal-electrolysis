@@ -16,8 +16,13 @@ int main (int argc, char **argv){
 
     initialization(config, domain, particles, phi, electric_field);
 
-    print_fields(config, domain, phi, electric_field, "results/data/fields_"+std::to_string(0)+".dat");
-    print_particles(config, particles, "results/data/particles_"+std::to_string(0)+".dat");
+    //La impresion se hace en un thread independiente del programa.
+    //Por lo que el programa no necesita esperar 
+    //a que la impresion termine para seguirl.
+    //No necesariamente en un core aparte, 
+    //pero en performace es casi equivalente a no imprimir nada.
+    auto aux1 = std::async(std::launch::async, [&config, &domain, &phi, &electric_field]{print_fields(config, domain, phi, electric_field, "results/data/fields_"+std::to_string(0)+".dat");});
+    auto aux2 = std::async(std::launch::async, [&config, &particles]{print_particles(config, particles, "results/data/particles_"+std::to_string(0)+".dat");});
 
     Crandom random(config.seed);
 
@@ -47,8 +52,10 @@ int main (int argc, char **argv){
         get_electric_field(config, phi, electric_field);
 
         if (ii%config.vis_iterations == 0){
-            print_fields(config, domain, phi, electric_field, "results/data/fields_"+std::to_string(ii/config.vis_iterations)+".dat");
-            print_particles(config, particles, "results/data/particles_"+std::to_string(ii/config.vis_iterations)+".dat");
+            aux1.get();
+            aux2.get();
+            aux1 = std::async(std::launch::async, [&config, &domain, &phi, &electric_field,ii]{print_fields(config, domain, phi, electric_field, "results/data/fields_"+std::to_string(ii/config.vis_iterations)+".dat");});
+            aux2 = std::async(std::launch::async, [&config, &particles,ii]{print_particles(config, particles, "results/data/particles_"+std::to_string(ii/config.vis_iterations)+".dat");});
         }
 
         if (particles.size() == 0){

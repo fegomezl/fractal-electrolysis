@@ -7,6 +7,7 @@
 #include <vector>
 #include <chrono>
 #include <omp.h>
+#include <future>
 
 struct Config{
     Config();
