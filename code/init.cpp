@@ -12,7 +12,7 @@ Config::Config(){
 
     seed = 50;
 
-    max_iter_relax = 10;
+    max_iter_relax = 10000;
     alpha_relax = 1.0;
     res_relax = 1e-6;
 
