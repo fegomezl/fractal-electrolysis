@@ -3,7 +3,7 @@
 Config::Config(){
 
     Lx = Ly = 9.;
-    nx = ny = 6081; 
+    nx = ny = 12801; 
 
     Rint = 0.15;
     Rext = 4.5;

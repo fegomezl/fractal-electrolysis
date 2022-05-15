@@ -10,7 +10,7 @@ void relaxation(const Config &config, const std::vector<bool> &domain, std::vect
     {
         TotalRes=-1.0;
 
-        #pragma omp parallel for private(j,i,R), reduction(max:TotalRes), num_threads(cores), schedule(static)
+        #pragma omp parallel for private(j,i,R), reduction(max:TotalRes), schedule(static), num_threads(cores)
         for(j = 1; j < config.ny-1; j++)
             for(i = 1; i < config.ny-1; i++) {
                 R = domain[i+config.nx*j]*(4*phi[i+config.nx*j] - phi[i+config.nx*(j+1)] - phi[i+config.nx*(j-1)] - phi[i+1+config.nx*j] - phi[i-1+config.nx*j]);
