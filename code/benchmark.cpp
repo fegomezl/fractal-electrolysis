@@ -10,9 +10,12 @@ void benchmark(const Config &config, std::vector<bool> &domain, std::vector<doub
     //system_evolve(config, random, domain, particles, phi, electric_field);
     //relaxation(config, domain, phi);
     //get_electric_field(config, phi, electric_field);
+    std::string name = "results/scaling.txt";
+    std::ofstream fout;
+    fout.open(name);
 
-    int samples = 1000;
-    int max_cores = 32;
+    int samples = 100;
+    int max_cores = 8;
 
     for (int i = 1; i <  max_cores+1; ++i)
     {   
@@ -36,5 +39,7 @@ void benchmark(const Config &config, std::vector<bool> &domain, std::vector<doub
         double average = t/(samples*1.0);
         double average2 = t_2/(samples*1.0);
         std::cout << "cores:\t" << i << "\t<t>:\t" << average << "\tvar(t):\t" << average2 - average*average << "\tms\n";
+        fout << i << "," << average << "," << average2 - average*average << "\n";
     }
+    fout.close();
 }

@@ -20,7 +20,7 @@ int main (int argc, char **argv){
 
     return 0;
 
-    //La impresion se hace en un thread independiente del programa.
+    /*//La impresion se hace en un thread independiente del programa.
     //Por lo que el programa no necesita esperar 
     //a que la impresion termine para seguirl.
     //No necesariamente en un core aparte, 
@@ -75,5 +75,5 @@ int main (int argc, char **argv){
     //Esperar a la impresion del ultimo frame 
     aux1.get();
     aux2.get();
-    return 0;
+    return 0;*/
 }
