@@ -1,11 +1,6 @@
 #include "header.h"
 
 int main (int argc, char **argv){
-    using std::chrono::high_resolution_clock;
-    using std::chrono::duration_cast;
-    using std::chrono::duration;
-    using std::chrono::milliseconds;
-
     Config config;
     std::vector<bool> domain(config.N);
     std::vector<double> particles;
@@ -16,11 +11,9 @@ int main (int argc, char **argv){
 
     initialization(config, domain, particles, phi, electric_field);
 
-    benchmark(config, domain, particles, phi, electric_field);
+    //benchmark(config, domain, particles, phi, electric_field);
 
-    return 0;
-
-    /*//La impresion se hace en un thread independiente del programa.
+    //La impresion se hace en un thread independiente del programa.
     //Por lo que el programa no necesita esperar 
     //a que la impresion termine para seguirl.
     //No necesariamente en un core aparte, 
@@ -40,7 +33,6 @@ int main (int argc, char **argv){
               << std::left << std::setw(12)
               << "\n------------------------------------------------\n";
 
-    auto t1 = high_resolution_clock::now();
     for (int ii = 1; ii <= config.iterations; ii++){
 
         double percentage = 100*ii/config.iterations;
@@ -67,13 +59,9 @@ int main (int argc, char **argv){
             break;
         }
     }
-    auto t2 = high_resolution_clock::now();
-
-    duration<double, std::milli> ms_double = t2 - t1;
-    std::cout << "Execution time: " << ms_double.count()/1000.0 << "ms \n";
 
     //Esperar a la impresion del ultimo frame 
     aux1.get();
     aux2.get();
-    return 0;*/
+    return 0;
 }

@@ -14,8 +14,8 @@ void benchmark(const Config &config, std::vector<bool> &domain, std::vector<doub
     std::ofstream fout;
     fout.open(name);
 
-    int samples = 10;
-    int max_cores = 32;
+    int samples = 100;
+    int max_cores = 1;
 
     for (int i = 1; i <  max_cores+1; ++i)
     {   
@@ -27,8 +27,7 @@ void benchmark(const Config &config, std::vector<bool> &domain, std::vector<doub
             initialization(config, domain, particles, phi, electric_field);
 
             auto t1 = high_resolution_clock::now();
-            relaxation(config, domain, phi, i);
-            //get_electric_field(config, phi, electric_field);
+            relaxation(config, domain, phi);
             auto t2 = high_resolution_clock::now();
 
             duration<double, std::milli> ms_double = t2 - t1;
