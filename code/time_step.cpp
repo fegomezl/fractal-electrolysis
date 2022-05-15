@@ -88,7 +88,7 @@ void system_evolve(const Config &config, Crandom &random, std::vector<bool> &dom
             if (V_new == 0) {
                 for (auto &ii : neighbors){
                     domain[ii] = 0;
-                    phi[ii] = 0.;
+                    phi[ii] = 0.0;
                 }
                 particles.erase(particles.begin()+2*(ii-k), particles.begin()+2*(ii-k)+1);
                 k += 1;
