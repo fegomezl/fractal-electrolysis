@@ -3,7 +3,7 @@
 Config::Config(){
 
     Lx = Ly = 9.;
-    nx = ny = 729; 
+    nx = ny = 6081; 
 
     Rint = 0.15;
     Rext = 4.5;
@@ -12,7 +12,7 @@ Config::Config(){
 
     seed = 50;
 
-    max_iter_relax = 10;
+    max_iter_relax = 5;
     alpha_relax = 1.0;
     res_relax = 1e-6;
 

@@ -14,8 +14,8 @@ void benchmark(const Config &config, std::vector<bool> &domain, std::vector<doub
     std::ofstream fout;
     fout.open(name);
 
-    int samples = 100;
-    int max_cores = 8;
+    int samples = 10;
+    int max_cores = 32;
 
     for (int i = 1; i <  max_cores+1; ++i)
     {   
