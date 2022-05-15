@@ -12,6 +12,8 @@
 struct Config{
     Config();
 
+    int nproc;
+
     int nx;
     int ny;
     int N;

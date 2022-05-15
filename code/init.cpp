@@ -2,38 +2,94 @@
 
 Config::Config(){
 
-    Lx = Ly = 9.;
-    nx = ny = 729; 
+    /****
+     * Read parameters of the system and 
+     * stablish constants for the program.
+     ****/
 
-    Rint = 0.15;
-    Rext = 4.5;
+    std::string line;
+    std::ifstream parameters("settings/parameters.txt");
 
-    V = 1.;
+    for (int ii = 0; ii < 14; ii++)
+        std::getline(parameters,line);
 
-    seed = 50;
+    std::getline(parameters,line);
+    nproc = std::stoi(line.erase(line.find('#'), line.size()));
 
-    max_iter_relax = 10000;
-    alpha_relax = 1.0;
-    res_relax = 1e-6;
+    std::getline(parameters,line);
+    iterations = std::stoi(line.erase(line.find('#'), line.size()));
 
-    molar_volume = 0.04;
-    molarity = 1.;
+    std::getline(parameters,line);
+    vis_iterations = std::stoi(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    nx = ny = std::stoi(line.erase(line.find('#'), line.size()));
+
+    for (int ii = 0; ii < 2; ii++)
+        std::getline(parameters,line);
+
+    std::getline(parameters,line);
+    seed = std::stoi(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    alpha_relax = std::stod(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    max_iter_relax = (int)std::stod(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    res_relax = std::stod(line.erase(line.find('#'), line.size()));
+
+    for (int ii = 0; ii < 2; ii++)
+        std::getline(parameters,line);
+
+    std::getline(parameters,line);
+    dt = std::stod(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    Lx = Ly = std::stod(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    Rint = std::stod(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    Rext = std::stod(line.erase(line.find('#'), line.size()));
+
+    for (int ii = 0; ii < 2; ii++)
+        std::getline(parameters,line);
+
+    std::getline(parameters,line);
+    molarity = std::stod(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    molar_volume = std::stod(line.erase(line.find('#'), line.size()));
+
+    for (int ii = 0; ii < 2; ii++)
+        std::getline(parameters,line);
+
+    std::getline(parameters,line);
+    V = std::stod(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    T = std::stod(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    diffusivity = std::stod(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    oxidation = std::stoi(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    electro_boltzmann = std::stod(line.erase(line.find('#'), line.size()));
+
+    parameters.close();
 
     N = nx*ny;
     lx = Lx/nx; 
     ly = Ly/ny;
     particle_proportion = molarity*molar_volume;
 
-    double T_celsius = 20;
-
-    iterations = 3600*2;
-    vis_iterations = 120;
-    dt = 1.;
-    T = T_celsius + 273.15;
-    diffusivity = 0.733E-5;
-    oxidation = 2;
-    electro_boltzmann = 1.160451E+4;
-
+    T += 273.15;
     sigma = sqrt(2*diffusivity*dt);
     mu = electro_boltzmann*oxidation*diffusivity*dt/T; 
 }

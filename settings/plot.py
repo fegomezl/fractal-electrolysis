@@ -4,23 +4,41 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.cm as cm
 
-#Parameters from the domain
-Lx = 10.
-Ly = 10.
-nx = 729
-ny = 729
-dt = 1.
-vis_iterations = 120
-dt = vis_iterations*dt
+#Parameters of the program
+parameters = open('settings/parameters.txt')
+
+for ii in range(0, 16):
+    line = parameters.readline()
+
+line = parameters.readline()
+line = line.split("#")
+vis_iterations = int(line[0])
+
+line = parameters.readline()
+line = line.split("#")
+nx = ny = int(line[0])
+
+for ii in range(0, 8):
+    line = parameters.readline()
+
+line = parameters.readline()
+line = line.split("#")
+dt = float(line[0])*vis_iterations
+
+line = parameters.readline()
+line = line.split("#")
+Lx = Ly = float(line[0])
+
+parameters.close()
 
 #Grid
-x = np.linspace(-Lx/2, Lx/2, nx+1) 
-y = np.linspace(-Ly/2, Ly/2, ny+1) 
+x = np.linspace(-Lx/2, Lx/2, nx+1)
+y = np.linspace(-Ly/2, Ly/2, ny+1)
 X, Y = np.meshgrid(x, y)
 
 #Nodes
-u = np.linspace(-(Lx-Lx/nx)/2, (Lx-Lx/nx)/2, nx) 
-v = np.linspace(-(Ly-Ly/ny)/2, (Ly-Ly/ny)/2, ny) 
+u = np.linspace(-(Lx-Lx/nx)/2, (Lx-Lx/nx)/2, nx)
+v = np.linspace(-(Ly-Ly/ny)/2, (Ly-Ly/ny)/2, ny)
 U, V = np.meshgrid(u, v)
 
 #Load data
@@ -67,13 +85,13 @@ fig.suptitle('t = '+str(n*dt)+' s')
 #Particles and domain
 ax = plt.subplot(gs[:-1, :])
 ax.set(xlim=(-Lx/2, Lx/2), ylim=(-Lx/2, Lx/2))
-plt.pcolormesh(X, Y, Domain, cmap = cm.binary_r) 
+plt.pcolormesh(X, Y, Domain, cmap = cm.binary_r)
 plt.scatter(pos_x, pos_y, marker='o', s=1)
 
 #Electric potential
 ax = plt.subplot(gs[2, 0])
 ax.set(xlim=(-Lx/2, Lx/2), ylim=(-Lx/2, Lx/2))
-plt.pcolormesh(X, Y, Phi, cmap = cm.Blues) 
+plt.pcolormesh(X, Y, Phi, cmap = cm.Blues)
 plt.colorbar()
 
 #Electric field
@@ -98,5 +116,5 @@ ax.set_xlim([-Lx/2, Lx/2])
 ax.set_ylim([-Ly/2, Ly/2])
 surf=ax.plot_surface(U, V, Phi, cmap=cm.Blues)
 cbar = fig.colorbar(surf)
-cbar.set_label('V'); 
+cbar.set_label('V')
 plt.show()

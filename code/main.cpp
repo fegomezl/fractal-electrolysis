@@ -1,6 +1,7 @@
 #include "header.h"
 
 int main (int argc, char **argv){
+
     Config config;
     std::vector<bool> domain(config.N);
     std::vector<double> particles;
@@ -63,5 +64,6 @@ int main (int argc, char **argv){
     //Esperar a la impresion del ultimo frame 
     aux1.get();
     aux2.get();
+
     return 0;
 }
