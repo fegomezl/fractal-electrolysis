@@ -16,6 +16,10 @@ int main (int argc, char **argv){
 
     initialization(config, domain, particles, phi, electric_field);
 
+    benchmark(config, domain, particles, phi, electric_field);
+
+    return 0;
+
     //La impresion se hace en un thread independiente del programa.
     //Por lo que el programa no necesita esperar 
     //a que la impresion termine para seguirl.

@@ -1,7 +1,7 @@
 #include "header.h"
 
-void relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi){
-    int i,j,iter,size,start;
+void relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, int cores){
+    int i,j,iter;
     auto phi_new = phi;
     double R,TotalRes;
 
@@ -9,18 +9,15 @@ void relaxation(const Config &config, const std::vector<bool> &domain, std::vect
     for (iter = 0; iter < config.max_iter_relax; ++iter)
     {
         TotalRes=-1.0;
-        #pragma omp parallel private(j,i,R,size,start), reduction(max:TotalRes)
-        {
-            size = (config.ny-2)/omp_get_num_threads();
-            start = 1 + omp_get_thread_num()*size;
 
-            for(j = 1; j < config.ny-1; j++)
-                for(i = start; i < start+size; i++) {
-                    R = domain[i+config.nx*j]*(4*phi[i+config.nx*j] - phi[i+config.nx*(j+1)] - phi[i+config.nx*(j-1)] - phi[i+1+config.nx*j] - phi[i-1+config.nx*j]);
-                    phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
-                    TotalRes = std::max(TotalRes,std::abs(R));
-                }
-        }
+        #pragma omp parallel for private(j,i,R), reduction(max:TotalRes), num_threads(cores), schedule(static)
+        for(j = 1; j < config.ny-1; j++)
+            for(i = 1; i < config.ny-1; i++) {
+                R = domain[i+config.nx*j]*(4*phi[i+config.nx*j] - phi[i+config.nx*(j+1)] - phi[i+config.nx*(j-1)] - phi[i+1+config.nx*j] - phi[i-1+config.nx*j]);
+                phi_new[i+config.nx*j] = phi[i+config.nx*j]-config.alpha_relax*R*0.25;
+                TotalRes = std::max(TotalRes,std::abs(R));
+            }
+
         //Check if method Converged
         if (TotalRes<config.res_relax)
             break;
@@ -29,7 +26,7 @@ void relaxation(const Config &config, const std::vector<bool> &domain, std::vect
     }
 }
 
-void relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, bool verbose){
+void relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, bool verbose, int cores){
     int i,j,iter,size,start;
     auto phi_new = phi;
     double R,TotalRes;
@@ -38,7 +35,7 @@ void relaxation(const Config &config, const std::vector<bool> &domain, std::vect
     for (iter = 0; iter < config.max_iter_relax; ++iter)
     {
         TotalRes=-1.0;
-        #pragma omp parallel private(j,i,R,size,start), reduction(max:TotalRes)
+        #pragma omp parallel private(j,i,R,size,start), reduction(max:TotalRes), num_threads(cores)
         {
             size = (config.ny-2)/omp_get_num_threads();
             start = 1 + omp_get_thread_num()*size;
