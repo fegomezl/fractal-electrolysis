@@ -1,13 +1,19 @@
 #pragma once
+#include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <fstream>
+#include <filesystem>
+#include <functional>
+#include <future>
 #include <iomanip>
 #include <iostream>
 #include <string>
-#include <vector>
-#include <chrono>
 #include <omp.h>
-#include <future>
+#include <vector>
+
+#pragma omp declare reduction (merge : std::vector<int> : omp_out.insert(omp_out.end(), omp_in.begin(), omp_in.end()))
+#pragma omp declare reduction(vec_mult : std::vector<double> : std::transform(omp_out.begin(), omp_out.end(), omp_in.begin(), omp_out.begin(), std::multiplies<double>())) initializer(omp_priv = omp_orig)
 
 struct Config{
     Config();
@@ -82,3 +88,4 @@ void print_particles(const Config &config, const std::vector<double> &particles,
 double system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field);
 
 void benchmark(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
+

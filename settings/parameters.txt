@@ -14,12 +14,12 @@ K       (Kelvin)
 Simulation:
 4               #Threads
 1               #Verbose
-120             #Iterations
+500             #Iterations
 10              #Visualitaion_Rate
 729             #Number_of_Elements(Lenghtwise)
 
 Algorithms:
-0               #Random_Seed
+50              #Random_Seed
 1.0             #Relaxation_Alpha
 1E+4            #Relaxation_Max_Iterations
 1E-6            #Relaxation_Max_Residue

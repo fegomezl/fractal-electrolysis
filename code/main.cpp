@@ -14,8 +14,9 @@ int main (int argc, char **argv){
 
     //benchmark(config, domain, particles, phi, electric_field);
 
-    print_fields(config, domain, phi, electric_field, "results/data/fields_"+std::to_string(0)+".dat");
-    print_particles(config, particles, "results/data/particles_"+std::to_string(0)+".dat");
+    std::filesystem::create_directories("results/data/data_0");
+    print_fields(config, domain, phi, electric_field, "results/data/data_0/fields_");
+    print_particles(config, particles, "results/data/data_0/particles_");
 
     Crandom random(config.seed);
     int ii = 0;
@@ -56,8 +57,9 @@ int main (int argc, char **argv){
 
         if (ii%config.vis_iterations == 0){
             printed += 1;
-            print_fields(config, domain, phi, electric_field, "results/data/fields_"+std::to_string(printed)+".dat");
-            print_particles(config, particles, "results/data/particles_"+std::to_string(printed)+".dat");
+            std::filesystem::create_directories("results/data/data_"+std::to_string(printed));
+            print_fields(config, domain, phi, electric_field, "results/data/data_"+std::to_string(printed)+"/fields_");
+            print_particles(config, particles, "results/data/data_"+std::to_string(printed)+"/particles_");
         }
 
         if (config.verbose){

@@ -7,7 +7,14 @@ from matplotlib import cm
 #Parameters of the program
 parameters = open('settings/parameters.txt')
 
-for ii in range(0, 17):
+for ii in range(0, 14):
+    line = parameters.readline()
+
+line = parameters.readline()
+line = line.split("#")
+nproc = int(line[0])
+
+for ii in range(0, 2):
     line = parameters.readline()
 
 line = parameters.readline()
@@ -44,13 +51,19 @@ U, V = np.meshgrid(u, v)
 #Load data
 try:
     ii = int(sys.argv[1])
-    fields = np.loadtxt('results/data/fields_'+str(ii)+'.dat')
-    particles = np.loadtxt('results/data/particles_'+str(ii)+'.dat')
+    fields = np.loadtxt('results/data/data_'+str(ii)+'/fields_0.dat')
+    particles = np.loadtxt('results/data/data_'+str(ii)+'/particles_0.dat')
+    for jj in range(1, nproc):
+        fields = np.concatenate((fields, np.loadtxt('results/data/data_'+str(ii)+'/fields_'+str(jj)+'.dat')))
+        particles = np.concatenate((particles, np.loadtxt('results/data/data_'+str(ii)+'/particles_'+str(jj)+'.dat')))
 except:
     try:
         ii = 0
-        fields = np.loadtxt('results/data/fields_'+str(ii)+'.dat')
-        particles = np.loadtxt('results/data/particles_'+str(ii)+'.dat')
+        fields = np.loadtxt('results/data/data_'+str(ii)+'/fields_0.dat')
+        particles = np.loadtxt('results/data/data_'+str(ii)+'/particles_0.dat')
+        for jj in range(1, nproc):
+            fields = np.concatenate((fields, np.loadtxt('results/data/data_'+str(ii)+'/fields_'+str(jj)+'.dat')))
+            particles = np.concatenate((particles, np.loadtxt('results/data/data_'+str(ii)+'/particles_'+str(jj)+'.dat')))
         print('Set default to initial data.')
     except:
         print('No data.')
