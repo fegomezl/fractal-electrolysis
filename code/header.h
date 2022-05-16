@@ -13,39 +13,28 @@ struct Config{
     Config();
 
     int nproc;
+    bool verbose;
 
-    int nx;
-    int ny;
+    int iterations;
+    int vis_iterations;
+
+    int n;
     int N;
 
-    double Lx;
-    double Ly;
-    double lx;
-    double ly;
+    int seed;
+    double relax_alpha;
+    int relax_max_iter;
+    double relax_res;
 
+    double dt;
+    double L;
+    double l;
     double Rint;
     double Rext;
 
-    double V;
-
-    int max_iter_relax;
-    double alpha_relax;
-    double res_relax;
-
-    double molar_volume;
-    double molarity;
     double particle_proportion;
 
-    int seed;
-    
-    double dt;
-    int iterations;
-    int vis_iterations;
-    double diffusivity;
-    int oxidation;
-    double electro_boltzmann;
-    double T;
-
+    double V;
     double sigma;
     double mu;
 };
@@ -83,12 +72,12 @@ class Crandom{
 
 void initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
 
-void relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi);
-void relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, const bool verbose);
+double relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi);
+double relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, const bool verbose);
 void get_electric_field(const Config &config, const std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
 
 void print_fields(const Config &config, const std::vector<bool> &domain, const std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::string name = "results/data/fields.dat"); 
 void print_particles(const Config &config, const std::vector<double> &particles, const std::string name = "results/data/particles.dat"); 
 
-void system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field);
+double system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field);
 void benchmark(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);

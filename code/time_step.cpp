@@ -1,6 +1,6 @@
 #include "header.h"
 
-void system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field){
+double system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field){
     /****
      * Move particles according to the Smoluchowski Diffusion Equation.
      *
@@ -22,8 +22,8 @@ void system_evolve(const Config &config, Crandom &random, std::vector<bool> &dom
     auto particles_old = particles;
 
     for(long unsigned int ii = 0; ii < particles.size()/2; ii++){
-        double x = particles[2*ii]/config.lx;
-        double y = particles[2*ii+1]/config.ly;
+        double x = particles[2*ii]/config.l;
+        double y = particles[2*ii+1]/config.l;
         int x0 = floor(x);
         int x1 = x0 + 1;
         int y0 = floor(y);
@@ -34,21 +34,21 @@ void system_evolve(const Config &config, Crandom &random, std::vector<bool> &dom
 
 
         //Estos 4 if son mas rapidos que los 2 if con 2 if dentro 
-        if (abs(x0) <= (config.nx - 1)/2 && abs(y0) <= (config.ny - 1)/2){
-            Ex00 = electric_field[0][x0+(config.nx-1)/2 + (y0+(config.ny-1)/2)*config.ny];
-            Ey00 = electric_field[1][x0+(config.nx-1)/2 + (y0+(config.ny-1)/2)*config.ny];
+        if (abs(x0) <= (config.n - 1)/2 && abs(y0) <= (config.n - 1)/2){
+            Ex00 = electric_field[0][x0+(config.n-1)/2 + (y0+(config.n-1)/2)*config.n];
+            Ey00 = electric_field[1][x0+(config.n-1)/2 + (y0+(config.n-1)/2)*config.n];
         }
-        if (abs(x0) <= (config.nx - 1)/2 && abs(y1) <= (config.ny - 1)/2){
-            Ex01 = electric_field[0][x0+(config.nx-1)/2 + (y1+(config.ny-1)/2)*config.ny];
-            Ey01 = electric_field[1][x0+(config.nx-1)/2 + (y1+(config.ny-1)/2)*config.ny];
+        if (abs(x0) <= (config.n - 1)/2 && abs(y1) <= (config.n - 1)/2){
+            Ex01 = electric_field[0][x0+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n];
+            Ey01 = electric_field[1][x0+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n];
         }
-        if (abs(x1) <= (config.nx - 1)/2 && abs(y0) <= (config.ny - 1)/2){
-            Ex10 = electric_field[0][x1+(config.nx-1)/2 + (y0+(config.ny-1)/2)*config.ny];
-            Ey10 = electric_field[1][x1+(config.nx-1)/2 + (y0+(config.ny-1)/2)*config.ny];
+        if (abs(x1) <= (config.n - 1)/2 && abs(y0) <= (config.n - 1)/2){
+            Ex10 = electric_field[0][x1+(config.n-1)/2 + (y0+(config.n-1)/2)*config.n];
+            Ey10 = electric_field[1][x1+(config.n-1)/2 + (y0+(config.n-1)/2)*config.n];
         }
-        if (abs(x1) <= (config.nx - 1)/2 && abs(y1) <= (config.ny - 1)/2){
-            Ex11 = electric_field[0][x1+(config.nx-1)/2 + (y1+(config.ny-1)/2)*config.ny];
-            Ey11 = electric_field[1][x1+(config.nx-1)/2 + (y1+(config.ny-1)/2)*config.ny];
+        if (abs(x1) <= (config.n - 1)/2 && abs(y1) <= (config.n - 1)/2){
+            Ex11 = electric_field[0][x1+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n];
+            Ey11 = electric_field[1][x1+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n];
         }
 
         double Ex = Ex00*(x1-x)*(y1-y) + Ex01*(x1-x)*(y-y0) + Ex10*(x-x0)*(y1-y) + Ex11*(x-x0)*(y-y0);
@@ -60,22 +60,22 @@ void system_evolve(const Config &config, Crandom &random, std::vector<bool> &dom
 
     int k = 0;
     for(long unsigned int ii = 0; ii < particles.size()/2; ii++){
-        double x = particles[2*(ii-k)]/config.lx;
-        double y = particles[2*(ii-k)+1]/config.ly;
+        double x = particles[2*(ii-k)]/config.l;
+        double y = particles[2*(ii-k)+1]/config.l;
         int x0 = floor(x);
         int x1 = x0 + 1;
         int y0 = floor(y);
         int y1 = y0 + 1;
 
         std::vector<int> neighbors;
-        if (abs(x0) <= (config.nx - 1)/2 && abs(y0) <= (config.ny - 1)/2)
-            neighbors.push_back(x0+(config.nx-1)/2 + (y0+(config.ny-1)/2)*config.ny);
-        if (abs(x0) <= (config.nx - 1)/2 && abs(y1) <= (config.ny - 1)/2)
-            neighbors.push_back(x0+(config.nx-1)/2 + (y1+(config.ny-1)/2)*config.ny);
-        if (abs(x1) <= (config.nx - 1)/2 && abs(y0) <= (config.ny - 1)/2)
-            neighbors.push_back(x1+(config.nx-1)/2 + (y0+(config.ny-1)/2)*config.ny);
-        if (abs(x1) <= (config.nx - 1)/2 && abs(y1) <= (config.ny - 1)/2)
-            neighbors.push_back(x1+(config.nx-1)/2 + (y1+(config.ny-1)/2)*config.ny);        
+        if (abs(x0) <= (config.n - 1)/2 && abs(y0) <= (config.n - 1)/2)
+            neighbors.push_back(x0+(config.n-1)/2 + (y0+(config.n-1)/2)*config.n);
+        if (abs(x0) <= (config.n - 1)/2 && abs(y1) <= (config.n - 1)/2)
+            neighbors.push_back(x0+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n);
+        if (abs(x1) <= (config.n - 1)/2 && abs(y0) <= (config.n - 1)/2)
+            neighbors.push_back(x1+(config.n-1)/2 + (y0+(config.n-1)/2)*config.n);
+        if (abs(x1) <= (config.n - 1)/2 && abs(y1) <= (config.n - 1)/2)
+            neighbors.push_back(x1+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n);        
 
         bool liquid = 1;
         double V_new = 1.;
@@ -98,4 +98,6 @@ void system_evolve(const Config &config, Crandom &random, std::vector<bool> &dom
             }
         }
     }
+
+    return particles.size();
 }

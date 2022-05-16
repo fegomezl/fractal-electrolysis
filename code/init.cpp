@@ -6,7 +6,6 @@ Config::Config(){
      * Read parameters of the system and 
      * stablish constants for the program.
      ****/
-
     std::string line;
     std::ifstream parameters("settings/parameters.txt");
 
@@ -17,13 +16,16 @@ Config::Config(){
     nproc = std::stoi(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
+    verbose = std::stoi(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
     iterations = std::stoi(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
     vis_iterations = std::stoi(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    nx = ny = std::stoi(line.erase(line.find('#'), line.size()));
+    n = std::stoi(line.erase(line.find('#'), line.size()));
 
     for (int ii = 0; ii < 2; ii++)
         std::getline(parameters,line);
@@ -32,13 +34,13 @@ Config::Config(){
     seed = std::stoi(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    alpha_relax = std::stod(line.erase(line.find('#'), line.size()));
+    relax_alpha = std::stod(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    max_iter_relax = (int)std::stod(line.erase(line.find('#'), line.size()));
+    relax_max_iter = (int)std::stod(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    res_relax = std::stod(line.erase(line.find('#'), line.size()));
+    relax_res = std::stod(line.erase(line.find('#'), line.size()));
 
     for (int ii = 0; ii < 2; ii++)
         std::getline(parameters,line);
@@ -47,7 +49,7 @@ Config::Config(){
     dt = std::stod(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    Lx = Ly = std::stod(line.erase(line.find('#'), line.size()));
+    L = std::stod(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
     Rint = std::stod(line.erase(line.find('#'), line.size()));
@@ -59,10 +61,10 @@ Config::Config(){
         std::getline(parameters,line);
 
     std::getline(parameters,line);
-    molarity = std::stod(line.erase(line.find('#'), line.size()));
+    double molarity = std::stod(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    molar_volume = std::stod(line.erase(line.find('#'), line.size()));
+    double molar_volume = std::stod(line.erase(line.find('#'), line.size()));
 
     for (int ii = 0; ii < 2; ii++)
         std::getline(parameters,line);
@@ -71,27 +73,28 @@ Config::Config(){
     V = std::stod(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    T = std::stod(line.erase(line.find('#'), line.size()));
+    double T = std::stod(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    diffusivity = std::stod(line.erase(line.find('#'), line.size()));
+    double diffusivity = std::stod(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    oxidation = std::stoi(line.erase(line.find('#'), line.size()));
+    double oxidation = std::stoi(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    electro_boltzmann = std::stod(line.erase(line.find('#'), line.size()));
+    double electro_boltzmann = std::stod(line.erase(line.find('#'), line.size()));
 
     parameters.close();
 
-    N = nx*ny;
-    lx = Lx/nx; 
-    ly = Ly/ny;
-    particle_proportion = molarity*molar_volume;
+    /****
+     * Set derived constants
+     ****/
 
-    T += 273.15;
+    N = n*n;
+    l = L/n; 
+    particle_proportion = molarity*molar_volume;
     sigma = sqrt(2*diffusivity*dt);
-    mu = electro_boltzmann*oxidation*diffusivity*dt/T; 
+    mu = electro_boltzmann*oxidation*diffusivity*dt/(T+273.15); 
 }
 
 void initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field){
@@ -102,19 +105,25 @@ void initialization(const Config &config, std::vector<bool> &domain, std::vector
      ****/
     std::vector<int> dissociation;    
     for(int ii = 0; ii < config.N; ii++){
-        double x = (ii%config.nx-(config.nx-1)/2)*config.lx;
-        double y = (ii/config.nx-(config.ny-1)/2)*config.ly;
+        double x = (ii%config.n-(config.n-1)/2)*config.l;
+        double y = (ii/config.n-(config.n-1)/2)*config.l;
         double r = hypot(x, y);
 
         if (r <= config.Rint) {
+            domain[ii] = 0;
             phi[ii] = 0.;
-            domain[ii] = 0;
+            electric_field[0][ii] = 0.;
+            electric_field[1][ii] = 0.;
         } else if (r >= config.Rext) {
-            phi[ii] = config.V;
             domain[ii] = 0;
+            phi[ii] = config.V;
+            electric_field[0][ii] = 0.;
+            electric_field[1][ii] = 0.;
         } else {
-            phi[ii] = config.V*log(r/config.Rint)/log(config.Rext/config.Rint);
             domain[ii] = 1;
+            phi[ii] = config.V*log(r/config.Rint)/log(config.Rext/config.Rint);
+            electric_field[0][ii] = -config.V*x/(r*r*log(config.Rext/config.Rint));
+            electric_field[1][ii] = -config.V*y/(r*r*log(config.Rext/config.Rint));
             dissociation.push_back(ii);
         }
     }
@@ -129,12 +138,7 @@ void initialization(const Config &config, std::vector<bool> &domain, std::vector
     for(int ii = 0; ii < N_particles; ii++){
         int jj = (N_sites-1)*random.r();
         int kk = dissociation[jj];
-        particles.push_back((kk%config.nx-(config.nx-1)/2)*config.lx);
-        particles.push_back((kk/config.nx-(config.ny-1)/2)*config.ly);
+        particles.push_back((kk%config.n-(config.n-1)/2)*config.l);
+        particles.push_back((kk/config.n-(config.n-1)/2)*config.l);
     }
-
-    /****
-     * Calculate initial electric field
-     ****/
-    get_electric_field(config, phi, electric_field);
 }
