@@ -80,4 +80,5 @@ void print_fields(const Config &config, const std::vector<bool> &domain, const s
 void print_particles(const Config &config, const std::vector<double> &particles, const std::string name = "results/data/particles.dat"); 
 
 double system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field);
+
 void benchmark(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
