@@ -25,7 +25,7 @@ double system_evolve(const Config &config, Crandom &random, std::vector<bool> &d
     int x0=0, x1=0, y0=0, y1=0;
     double Ex=0., Ey=0.;
 
-    #pragma omp parallel for private(x, y, x0, x1, y0, y1, Ex, Ey) num_threads(config.nproc)
+    #pragma omp parallel for private(x, y, x0, x1, y0, y1, Ex, Ey)
     for (long unsigned int ii = 0; ii < particles.size()/2; ii++){
 
         //std::cout << omp_get_thread_num() << "\t" << ii << "\n";
@@ -37,6 +37,7 @@ double system_evolve(const Config &config, Crandom &random, std::vector<bool> &d
         y0 = floor(y);
         y1 = y0 + 1;
 
+        Ex = Ey = 0.;            
         if (((1-2*std::signbit(x0))*(x0+x1) <= config.n - 2) && ((1-2*std::signbit(y0))*(y0+y1) <= config.n - 2)){
             Ex = (x1-x)*(y1-y)*electric_field[0][x0+(config.n-1)/2 + (y0+(config.n-1)/2)*config.n]
                + (x1-x)*(y-y0)*electric_field[0][x0+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n]
@@ -46,8 +47,7 @@ double system_evolve(const Config &config, Crandom &random, std::vector<bool> &d
                + (x1-x)*(y-y0)*electric_field[1][x0+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n]
                + (x-x0)*(y1-y)*electric_field[1][x1+(config.n-1)/2 + (y0+(config.n-1)/2)*config.n]
                + (x-x0)*(y-y0)*electric_field[1][x1+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n];
-        } else
-            Ex = Ey = 0.;            
+        }
 
         particles[2*ii]   += config.mu*Ex + config.sigma*random.gauss(0., 1.);
         particles[2*ii+1] += config.mu*Ey + config.sigma*random.gauss(0., 1.);

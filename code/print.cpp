@@ -15,7 +15,7 @@ void print_fields(const Config &config, const std::vector<bool> &domain, const s
     for (long unsigned int ii = 1; ii < print_range.size(); ii++)
         print_range[ii] += print_range[ii-1];
 
-    #pragma omp parallel num_threads(config.nproc)
+    #pragma omp parallel
     {
         int pid = omp_get_thread_num();
 
@@ -45,7 +45,7 @@ void print_particles(const Config &config, const std::vector<double> &particles,
     for (long unsigned int ii = 1; ii < print_range.size(); ii++)
         print_range[ii] += print_range[ii-1];
 
-    #pragma omp parallel num_threads(config.nproc)
+    #pragma omp parallel
     {
         int pid = omp_get_thread_num();
 

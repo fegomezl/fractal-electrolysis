@@ -12,7 +12,7 @@ double relaxation(const Config &config, const std::vector<bool> &domain, std::ve
         //No he encontrado diferencia significativa entre static y guided.
         //Guided parece ser mejor que static cuando el numero de procesos no es multiplo y en casos raros.
         //Solo hay 1 caso en el que static es mejor que guided
-        #pragma omp parallel for collapse(2) private(j,i,R), reduction(max:TotalRes), schedule(guided), num_threads(config.nproc)
+        #pragma omp parallel for private(j,i,R) reduction(max:TotalRes) schedule(guided)
         for(j = 1; j < config.n-1; j++)
             for(i = 1; i < config.n-1; i++) {
                 R = domain[i+config.n*j]*(4*phi[i+config.n*j] - phi[i+config.n*(j+1)] - phi[i+config.n*(j-1)] - phi[i+1+config.n*j] - phi[i-1+config.n*j]);
@@ -39,7 +39,7 @@ double relaxation(const Config &config, const std::vector<bool> &domain, std::ve
     for (iter = 0; iter < config.relax_max_iter; ++iter)
     {
         TotalRes=-1.0;
-        #pragma omp parallel for collapse(2) private(j,i,R), reduction(max:TotalRes), schedule(guided), num_threads(config.nproc)
+        #pragma omp parallel for private(j,i,R) reduction(max:TotalRes) schedule(guided)
         for(j = 1; j < config.n-1; j++)
             for(i = 1; i < config.n-1; i++) {
                 R = domain[i+config.n*j]*(4*phi[i+config.n*j] - phi[i+config.n*(j+1)] - phi[i+config.n*(j-1)] - phi[i+1+config.n*j] - phi[i-1+config.n*j]);
@@ -68,7 +68,7 @@ void get_electric_field(const Config &config, const std::vector<double> &phi, st
     int i=0,j=0;
 
     //#pragma omp parallel private(j,i,size,start,partial_x,partial_y), num_threads(cores)
-    #pragma omp parallel for collapse(2) private(j,i), schedule(guided), num_threads(config.nproc)
+    #pragma omp parallel for private(j,i) schedule(guided)
         for(j = 1; j < config.n-1; j++)
             for(i = 1; i < config.n-1; i++) {
                 electric_field[0][i+config.n*j] = -(phi[i+1+config.n*j]-phi[i-1+config.n*j])/(2*config.l); //center deriv
