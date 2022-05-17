@@ -26,7 +26,7 @@ Algorithms:
 
 Kinematic:
 1.              #Time_Resolution(s)
-10.0             #Box_Size(cm)
+9.0             #Box_Size(cm)
 0.15            #Internal_Radius(cm)
 4.5             #External_Radius(cm)
 

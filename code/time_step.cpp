@@ -25,7 +25,7 @@ double system_evolve(const Config &config, Crandom &random, std::vector<bool> &d
     int x0=0, x1=0, y0=0, y1=0;
     double Ex=0., Ey=0.;
 
-    #pragma omp parallel for private(x, y, x0, x1, y0, y1, Ex, Ey)
+    //#pragma omp parallel for private(x, y, x0, x1, y0, y1, Ex, Ey)
     for (long unsigned int ii = 0; ii < particles.size()/2; ii++){
 
         //std::cout << omp_get_thread_num() << "\t" << ii << "\n";

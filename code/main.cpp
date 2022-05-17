@@ -10,14 +10,6 @@ int main (int argc, char **argv){
     std::vector<double> electric_field_y(config.N,0.0);
     std::vector<std::vector<double>> electric_field = {electric_field_x, electric_field_y};
 
-    initialization(config, domain, particles, phi, electric_field);
-
-    //benchmark(config, domain, particles, phi, electric_field);
-
-    std::filesystem::create_directories("results/data/data_0");
-    print_fields(config, domain, phi, electric_field, "results/data/data_0/fields_");
-    print_particles(config, particles, "results/data/data_0/particles_");
-
     Crandom random(config.seed);
     int ii = 0;
     int printed = 0;
@@ -37,7 +29,14 @@ int main (int argc, char **argv){
                   << "Particles"
                   << std::left << std::setw(12)
                   << "\n----------------------------------------------------------------------\n";
+    }
 
+    n_particles = initialization(config, domain, particles, phi, electric_field);
+    std::filesystem::create_directories("results/data/data_0");
+    print_fields(config, domain, phi, electric_field, "results/data/data_0/fields_");
+    print_particles(config, particles, "results/data/data_0/particles_");
+
+    if (config.verbose){
         std::cout << std::left << std::setw(12)
                   << "0%" << std::setw(12)
                   << ii << std::setw(12)

@@ -76,7 +76,7 @@ class Crandom{
         }
 };
 
-void initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
+double initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
 
 double relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi);
 double relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, const bool verbose);
