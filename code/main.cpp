@@ -31,10 +31,8 @@ int main (int argc, char **argv){
                   << "\n----------------------------------------------------------------------\n";
     }
 
-    n_particles = initialization(config, domain, particles, phi, electric_field);
-    std::filesystem::create_directories("results/data/data_0");
-    print_fields(config, domain, phi, electric_field, "results/data/data_0/fields_");
-    print_particles(config, particles, "results/data/data_0/particles_");
+    n_particles = initialization(config, domain, phi, electric_field, particles);
+    print(config, domain, phi, electric_field, particles);
 
     if (config.verbose){
         std::cout << std::left << std::setw(12)
@@ -50,15 +48,12 @@ int main (int argc, char **argv){
 
     for (ii = 1; ii <= config.iterations; ii++){
 
-        n_particles = system_evolve(config, random, domain, particles, phi, electric_field);
-        total_res = relaxation(config, domain, phi);
-        get_electric_field(config, phi, electric_field);
+        n_particles = system_evolve(config, random, domain, phi, electric_field, particles);
+        total_res = relaxation(config, domain, phi, electric_field);
 
         if (ii%config.vis_iterations == 0){
             printed += 1;
-            std::filesystem::create_directories("results/data/data_"+std::to_string(printed));
-            print_fields(config, domain, phi, electric_field, "results/data/data_"+std::to_string(printed)+"/fields_");
-            print_particles(config, particles, "results/data/data_"+std::to_string(printed)+"/particles_");
+            print(config, domain, phi, electric_field, particles, "results/data/data_"+std::to_string(printed));
         }
 
         if (config.verbose){
@@ -79,8 +74,7 @@ int main (int argc, char **argv){
 
     if ((ii-1)%config.vis_iterations != 0){
         printed += 1;
-        print_fields(config, domain, phi, electric_field, "results/data/fields_"+std::to_string(printed)+".dat");
-        print_particles(config, particles, "results/data/particles_"+std::to_string(printed)+".dat");
+        print(config, domain, phi, electric_field, particles, "results/data/data_"+std::to_string(printed));
 
         if (config.verbose){
             std::cout << std::left << std::setw(12)

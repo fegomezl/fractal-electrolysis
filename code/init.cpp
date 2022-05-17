@@ -97,7 +97,7 @@ Config::Config(){
     mu = electro_boltzmann*oxidation*diffusivity*dt/(T+273.15); 
 }
 
-double initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field){
+double initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, std::vector<double> &particles){
 
     /****
      * Initialization of electric potential, domain 

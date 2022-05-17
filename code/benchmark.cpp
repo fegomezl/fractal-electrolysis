@@ -24,10 +24,10 @@ void benchmark(const Config &config, std::vector<bool> &domain, std::vector<doub
 
         for (int j = 0; j < samples; ++j)
         {
-            initialization(config, domain, particles, phi, electric_field);
+            initialization(config, domain, phi, electric_field, particles);
 
             auto t1 = high_resolution_clock::now();
-            relaxation(config, domain, phi);
+            relaxation(config, domain, phi, electric_field);
             auto t2 = high_resolution_clock::now();
 
             duration<double, std::milli> ms_double = t2 - t1;

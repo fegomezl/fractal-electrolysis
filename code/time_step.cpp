@@ -1,6 +1,6 @@
 #include "header.h"
 
-double system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field){
+double system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, std::vector<double> &particles){
     /****
      * Move particles according to the Smoluchowski Diffusion Equation.
      *
@@ -25,10 +25,7 @@ double system_evolve(const Config &config, Crandom &random, std::vector<bool> &d
     int x0=0, x1=0, y0=0, y1=0;
     double Ex=0., Ey=0.;
 
-    #pragma omp parallel for private(x, y, x0, x1, y0, y1, Ex, Ey)
     for (long unsigned int ii = 0; ii < particles.size()/2; ii++){
-
-        //std::cout << omp_get_thread_num() << "\t" << ii << "\n";
 
         x = particles[2*ii]/config.l;
         y = particles[2*ii+1]/config.l;
@@ -56,59 +53,7 @@ double system_evolve(const Config &config, Crandom &random, std::vector<bool> &d
     bool liquid = 0;
     double V_new = 0.;
     int k = 0;
-    //std::vector<int> particles_remove;
     std::vector<int> neighbors = {0, 0, 0, 0};
-
-    //reduction(vec_mult: phi) num_threads(config.nproc)
-    /*#pragma omp for reduction(merge: particles_remove) 
-    for (long unsigned int ii = 0; ii < particles.size()/2; ii++){
-        x = particles[2*ii]/config.l;
-        y = particles[2*ii+1]/config.l;
-        x0 = floor(x);
-        x1 = x0 + 1;
-        y0 = floor(y);
-        y1 = y0 + 1;
-
-        liquid = 1;
-        V_new = 1.;
-        if (((1-2*std::signbit(x0))*(x0+x1) <= config.n - 2) && ((1-2*std::signbit(y0))*(y0+y1) <= config.n - 2)){
-
-            neighbors[0] = x0+(config.n-1)/2 + (y0+(config.n-1)/2)*config.n;
-            neighbors[1] = x0+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n;
-            neighbors[2] = x1+(config.n-1)/2 + (y0+(config.n-1)/2)*config.n;
-            neighbors[3] = x1+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n;
-
-            for (auto &jj : neighbors){
-                liquid &= domain[jj];
-                V_new *= phi[jj];
-            }
-
-            if (!liquid){
-                if (V_new == 0) {
-                    for (auto &jj : neighbors){
-                        domain[jj] = 0;
-                        phi[jj] = 0.0;
-                    }
-                    particles_remove.push_back(ii);
-                } else {
-                    particles[2*ii] = particles_old[2*ii];
-                    particles[2*ii+1] = particles_old[2*ii+1];
-                }
-            }
-        } else {
-            particles[2*ii] = particles_old[2*ii];
-            particles[2*ii+1] = particles_old[2*ii+1];
-        }
-    }
-
-    if (!particles_remove.empty()){
-        std::sort(particles_remove.begin(), particles_remove.end());
-        int k = 0;
-        for (auto &ii : particles_remove){
-            particles.erase(particles.begin()+2*(ii-k), particles.begin()+2*(ii-k)+1);
-            k += 1;
-        }
-    }*/
 
     for(long unsigned int ii = 0; ii < particles.size()/2; ii++){
 

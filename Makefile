@@ -20,7 +20,6 @@ main: main.x
 	@echo -e 'Running program ... \n'
 	@$(RUN)$< 
 	@echo -e '\nDone!\n'
-	#export OMP_NUM_THREADS=$(PROCCESORS)
 
 main.x: $(DEPENDENCIES)
 	@echo -e 'Compiling' $@ '... \c'
@@ -39,7 +38,7 @@ animation:
 	@python3 settings/animation.py
 
 clean:
-	@rm -rf *.x results/*.pdf results/data/*.dat
+	@rm -rf *.x results/*.pdf results/data/*
 
 oclean:
 	@rm -rf .objects/*.o

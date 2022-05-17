@@ -12,9 +12,6 @@
 #include <omp.h>
 #include <vector>
 
-#pragma omp declare reduction (merge : std::vector<int> : omp_out.insert(omp_out.end(), omp_in.begin(), omp_in.end()))
-#pragma omp declare reduction(vec_mult : std::vector<double> : std::transform(omp_out.begin(), omp_out.end(), omp_in.begin(), omp_out.begin(), std::multiplies<double>())) initializer(omp_priv = omp_orig)
-
 struct Config{
     Config();
 
@@ -76,16 +73,14 @@ class Crandom{
         }
 };
 
-double initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
+double initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, std::vector<double> &particles);
 
-double relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi);
-double relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, const bool verbose);
-void get_electric_field(const Config &config, const std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
+double relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
+double relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const bool verbose);
 
-void print_fields(const Config &config, const std::vector<bool> &domain, const std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::string name = "results/data/fields.dat"); 
-void print_particles(const Config &config, const std::vector<double> &particles, const std::string name = "results/data/particles.dat"); 
+void print(const Config &config, const std::vector<bool> &domain, const std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, const std::vector<double> &particles, const std::string folder = "results/data/data_0"); 
 
-double system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field);
+double system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, std::vector<double> &particles);
 
 void benchmark(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
 
