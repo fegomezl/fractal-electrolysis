@@ -9,7 +9,7 @@ void print_fields(const Config &config, const std::vector<bool> &domain, const s
     std::vector<int> print_range(config.nproc+1, config.N/config.nproc);
     print_range[0] = 0;
 
-    for (long unsigned int ii = 0; ii < config.N%config.nproc; ii++)
+    for (int ii = 0; ii < config.N%config.nproc; ii++)
         print_range[ii+1] += 1;
 
     for (long unsigned int ii = 1; ii < print_range.size(); ii++)
@@ -23,7 +23,7 @@ void print_fields(const Config &config, const std::vector<bool> &domain, const s
         fout.open(name+std::to_string(pid)+".dat");
 
         //internal values
-        for(long unsigned int ii = print_range[pid]; ii < print_range[pid+1]; ii++)
+        for(int ii = print_range[pid]; ii < print_range[pid+1]; ii++)
             fout << domain[ii] << "\t" << phi[ii] << "\t" << electric_field[0][ii] << "\t" << electric_field[1][ii] << "\n";
 
         fout.close();
@@ -52,7 +52,7 @@ void print_particles(const Config &config, const std::vector<double> &particles,
         std::ofstream fout;
         fout.open(name+std::to_string(pid)+".dat");
 
-        for (long unsigned int ii = print_range[pid]; ii < print_range[pid+1]; ii++)
+        for (int ii = print_range[pid]; ii < print_range[pid+1]; ii++)
             fout << particles[2*ii] << "\t" << particles[2*ii+1] << "\n";
 
         fout.close();

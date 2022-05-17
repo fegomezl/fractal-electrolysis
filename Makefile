@@ -1,8 +1,8 @@
 #Compiling parameters
-PROCCESORS = 4
-CXX = g++ #mpic++
+PROCCESORS = $(shell sed -n 15p settings/parameters.txt | tr -d -c 0-9.)
+CXX = g++ 
 FLAGS = -std=c++17 -O3 -Wall -fopenmp -fpic#-g -fsanitize=address -fsanitize=leak -fsanitize=undefined
-RUN = ./#mpirun -np $(PROCCESORS) ./
+RUN = ./
 SOURCES = $(wildcard code/*.cpp)
 DEPENDENCIES = $(SOURCES:code/%.cpp=.objects/%.o)
 
@@ -20,6 +20,7 @@ main: main.x
 	@echo -e 'Running program ... \n'
 	@$(RUN)$< 
 	@echo -e '\nDone!\n'
+	#export OMP_NUM_THREADS=$(PROCCESORS)
 
 main.x: $(DEPENDENCIES)
 	@echo -e 'Compiling' $@ '... \c'
