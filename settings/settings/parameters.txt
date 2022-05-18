@@ -1,0 +1,42 @@
+---------------------------
+Parameters of the program
+---------------------------
+Units:
+cm      (centimeters)
+s       (seconds)
+M       (molar)
+V       (Volts)
+C       (Coulumbs)
+J       (Jules)
+°C      (Celcius)
+K       (Kelvin)
+
+Simulation:
+8               #Threads
+1               #Verbose
+500             #Iterations
+10              #Visualitaion_Rate
+729             #Number_of_Elements(Lenghtwise)
+
+Algorithms:
+50              #Random_Seed
+1.0             #Relaxation_Alpha
+1E+4            #Relaxation_Max_Iterations
+1E-6            #Relaxation_Max_Residue
+
+Kinematic:
+1.              #Time_Resolution(s)
+9.0             #Box_Size(cm)
+0.15            #Internal_Radius(cm)
+4.5             #External_Radius(cm)
+
+Proportion:
+1.              #Molarity(M)
+0.04            #Molar_Volume(1/M)
+
+Dynamic:
+1.              #Voltage_Difference(V)
+20.0            #Temperature(°C)
+0.733E-5        #Diffusivity(cm^2/s)
+2               #Oxidation_Number
+1.160451E+4     #Electron_Boltzmann_Constant(K*C/J)
