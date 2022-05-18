@@ -1,10 +1,13 @@
 #Compiling parameters
-PROCCESORS = $(shell sed -n 15p settings/parameters.txt | tr -d -c 0-9.)
 CXX = g++ 
 FLAGS = -std=c++17 -O3 -Wall -fopenmp -fpic#-g -fsanitize=address -fsanitize=leak -fsanitize=undefined
 RUN = ./
 SOURCES = $(wildcard code/*.cpp)
 DEPENDENCIES = $(SOURCES:code/%.cpp=.objects/%.o)
+
+#Parallel computing
+OMP_NUM_THREADS = $(shell sed -n 15p settings/parameters.txt | tr -d -c 0-9.)
+export OMP_NUM_THREADS
 
 #Arguments for 'plot'
 ifeq (plot,$(firstword $(MAKECMDGOALS)))
