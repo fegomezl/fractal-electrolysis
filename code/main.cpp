@@ -2,6 +2,12 @@
 
 int main (int argc, char **argv){
 
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
+    auto t1 = high_resolution_clock::now();
+
     Config config;
     std::vector<bool> domain(config.N);
     std::vector<double> particles;
@@ -95,6 +101,10 @@ int main (int argc, char **argv){
 
     if (n_particles == 0 && config.verbose)
         std::cout << "No more particles.\n";
+
+    auto t2 = high_resolution_clock::now();
+    duration<double> ms_double = t2 - t1;
+    std::cout << "\n\nExecution time: " << ms_double.count() << " s\n";
 
     return 0;
 }
