@@ -20,7 +20,12 @@ def main():
     fields, particles = load_data(config,ii)
 
     #Plot data
-    plot_fileds_and_particles(config,fields,particles,X,Y,U,V,ii,sys.argv[2])
+    try:
+        d3=sys.argv[2]
+    except:
+        d3 = None
+
+    plot_fileds_and_particles(config,fields,particles,X,Y,U,V,ii,d3)
 
 if __name__ == '__main__':
     main()

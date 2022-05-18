@@ -1,6 +1,6 @@
 #include "header.h"
 
-double relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field){
+std::tuple<int,double> relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field){
     int i=0,j=0,iter=0;
     double R=0,TotalRes=0;
     auto phi_new = phi;
@@ -31,10 +31,10 @@ double relaxation(const Config &config, const std::vector<bool> &domain, std::ve
             electric_field[1][i+config.n*j] = -(phi[i+config.n*(j+1)]-phi[i+config.n*(j-1)])/(2*config.l); //center deriv
         }
 
-    return TotalRes;
+    return {iter,TotalRes};
 }
 
-double relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, bool verbose){
+std::tuple<int,double> relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, bool verbose){
     int i=0,j=0,iter=0;
     double R=0,TotalRes=0;
     auto phi_new = phi;
@@ -73,5 +73,5 @@ double relaxation(const Config &config, const std::vector<bool> &domain, std::ve
             electric_field[1][i+config.n*j] = -(phi[i+config.n*(j+1)]-phi[i+config.n*(j-1)])/(2*config.l); //center deriv
         }
 
-    return TotalRes;
+    return {iter,TotalRes};
 }

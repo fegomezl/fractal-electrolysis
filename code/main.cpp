@@ -11,7 +11,7 @@ int main (int argc, char **argv){
     std::vector<std::vector<double>> electric_field = {electric_field_x, electric_field_y};
 
     Crandom random(config.seed);
-    int ii = 0;
+    int ii = 0, iter = 0;
     int printed = 0;
     int n_particles = particles.size();
     double t = 0.;
@@ -19,16 +19,17 @@ int main (int argc, char **argv){
 
     if (config.verbose){
         std::cout << std::left << std::setw(12)
-                  << "----------------------------------------------------------------------\n"
+                  << "-------------------------------------------------------------------------------------\n"
                   << std::left << std::setw(12)
                   << "Progress" << std::setw(12)
                   << "Step" << std::setw(12)
                   << "Time" << std::setw(12)
                   << "Printed" << std::setw(12)
-                  << "Converged" << std::setw(12)
+                  << "Iterations" << std::setw(15)
+                  << "Converged" << std::setw(15)
                   << "Particles"
                   << std::left << std::setw(12)
-                  << "\n----------------------------------------------------------------------\n";
+                  << "\n-------------------------------------------------------------------------------------\n";
     }
 
     n_particles = initialization(config, domain, phi, electric_field, particles);
@@ -40,7 +41,8 @@ int main (int argc, char **argv){
                   << ii << std::setw(12)
                   << t  << std::setw(12)
                   << printed << std::setw(12)
-                  << total_res << std::setw(12)
+                  << iter << std::setw(15)
+                  << total_res << std::setw(15)
                   << n_particles 
                   << "\r";
         std::cout.flush();
@@ -49,7 +51,7 @@ int main (int argc, char **argv){
     for (ii = 1; ii <= config.iterations; ii++){
 
         n_particles = system_evolve(config, random, domain, phi, electric_field, particles);
-        total_res = relaxation(config, domain, phi, electric_field);
+        auto [iter,total_res] = relaxation(config, domain, phi, electric_field);
 
         if (ii%config.vis_iterations == 0){
             printed += 1;
@@ -62,7 +64,8 @@ int main (int argc, char **argv){
                       << ii << std::setw(12)
                       << ii*config.dt  << std::setw(12)
                       << printed << std::setw(12)
-                      << total_res << std::setw(12)
+                      << iter << std::setw(15)
+                      << total_res << std::setw(15)
                       << n_particles 
                       << "\r";
             std::cout.flush();
@@ -82,7 +85,8 @@ int main (int argc, char **argv){
                       << ii << std::setw(12)
                       << ii*config.dt  << std::setw(12)
                       << printed << std::setw(12)
-                      << total_res << std::setw(12)
+                      << iter << std::setw(15)
+                      << total_res << std::setw(15)
                       << n_particles 
                       << "\r";
             std::cout.flush();

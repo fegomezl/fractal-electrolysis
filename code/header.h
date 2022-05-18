@@ -75,8 +75,8 @@ class Crandom{
 
 double initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, std::vector<double> &particles);
 
-double relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
-double relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const bool verbose);
+std::tuple<int,double> relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
+std::tuple<int,double> relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const bool verbose);
 
 void print(const Config &config, const std::vector<bool> &domain, const std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, const std::vector<double> &particles, const std::string folder = "results/data/data_0"); 
 

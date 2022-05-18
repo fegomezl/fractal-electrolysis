@@ -39,12 +39,18 @@ class Config(object):
 		line = line.split("#")
 		self.nproc = int(line[0])
 
-		for ii in range(0, 2):
+		for ii in range(0, 1):
 		    line = parameters.readline()
 
 		line = parameters.readline()
 		line = line.split("#")
+		self.iterations = int(line[0])
+
+		line = parameters.readline()
+		line = line.split("#")
 		self.vis_iterations = int(line[0])
+
+		self.frames = int(self.iterations/self.vis_iterations)
 
 		line = parameters.readline()
 		line = line.split("#")
@@ -60,6 +66,11 @@ class Config(object):
 		line = parameters.readline()
 		line = line.split("#")
 		self.L = float(line[0])
+
+		for ii in range(0, 16):
+		    line = parameters.readline()
+		line = line.split("#")
+		self.fps = int(line[0])
 
 		parameters.close()
 		
@@ -111,11 +122,7 @@ def plot_fileds_and_particles(config,fields,particles,X,Y,U,V,ii,d3):
 
 	plt.show()
 
-	try:
-	    D3 = d3
-	    if (D3 != '3d'):
-	        exit()
-	except:
+	if (d3 != '3d'):
 	    exit()
 
 	#3D Electric potential
