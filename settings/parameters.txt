@@ -12,7 +12,7 @@ J       (Jules)
 K       (Kelvin)
 
 Simulation:
-4               #Threads
+8               #Threads
 1               #Verbose
 500             #Iterations
 10              #Visualitaion_Rate
