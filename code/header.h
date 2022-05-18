@@ -1,16 +1,12 @@
 #pragma once
-#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <fstream>
 #include <filesystem>
-#include <functional>
-#include <future>
-#include <iomanip>
 #include <iostream>
 #include <string>
-#include <omp.h>
 #include <vector>
+#include <omp.h>
 
 struct Config{
     Config();
@@ -81,6 +77,4 @@ std::tuple<int,double> relaxation(const Config &config, const std::vector<bool> 
 void print(const Config &config, const std::vector<bool> &domain, const std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, const std::vector<double> &particles, const std::string folder = "results/data/data_0"); 
 
 double system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, std::vector<double> &particles);
-
-void benchmark(const Config &config, std::vector<bool> &domain, std::vector<double> &particles, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
 
