@@ -5,9 +5,6 @@ import porespy as ps
 from scipy import stats
 import numpy as np
 
-ps.visualization.set_mpl_style()
-
-
 def main():
     #Parameters of the program
     config = Config()
@@ -19,14 +16,11 @@ def main():
     fields, particles, bit_map = load_data(config,n)
     bit_map = 1 - np.reshape(bit_map, (-1, config.n))
 
-    plt.imshow(bit_map)
-    plt.show()
-
     data = ps.metrics.boxcount(bit_map)
 
     result = stats.linregress(np.log10(data.size),np.log10(data.count))
     print('Fractial dimention = {:.4f} +- {:.4f}'.format(result.slope, result.stderr))
-    label = r'$d=10^b N^d$''\n'r'$d$''={:.3f}±{:.3f} \n b={:.3f}±{:.3f} \n r={:.5f}'.format(result.slope, result.stderr, result.intercept, result.intercept_stderr, result.rvalue)
+    label = r'$N=10^b L^d$''\n'r'$d$''={:.3f}±{:.3f} \n b={:.3f}±{:.3f} \n r={:.5f}'.format(result.slope, result.stderr, result.intercept, result.intercept_stderr, result.rvalue)
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4))
     ax1.set_yscale('log')
