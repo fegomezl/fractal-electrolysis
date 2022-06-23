@@ -38,6 +38,16 @@ void print(const Config &config, const std::vector<bool> &domain, const std::vec
 
         print_fields.close();
 
+        //Print only the fractal bitmap
+        print_fields.open(folder+"/bit_map_"+std::to_string(pid)+".dat");
+        for(int ii = print_fields_range[pid]; ii < print_fields_range[pid+1]; ii++){
+        		if (phi[ii]==1)
+            		print_fields << 0 << "\n";
+            	else
+            		print_fields << domain[ii] << "\n";
+            }
+        print_fields.close();
+
         std::ofstream print_particles;
         print_particles.open(folder+"/particles_"+std::to_string(pid)+".dat");
 
