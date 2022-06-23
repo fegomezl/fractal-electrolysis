@@ -11,7 +11,7 @@ def init():
 def animate(n,config,quad1,scatter1,ax):
     #Load data
     ax.set_title('t = '+str(n*config.dt)+' s')
-    fields, particles = load_data(config,n)
+    fields, particles, bit_map = load_data(config,n)
 
     #Transform data
     domain = fields[:,0]
