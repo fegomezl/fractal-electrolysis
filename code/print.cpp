@@ -42,7 +42,7 @@ void print(const Config &config, const std::vector<bool> &domain, const std::vec
         print_fields.open(folder+"/bit_map_"+std::to_string(pid)+".dat");
         for(int ii = print_fields_range[pid]; ii < print_fields_range[pid+1]; ii++){
         		if (phi[ii]==1)
-            		print_fields << 0 << "\n";
+            		print_fields << 1 << "\n";
             	else
             		print_fields << domain[ii] << "\n";
             }
