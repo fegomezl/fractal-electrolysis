@@ -35,7 +35,7 @@ Proportion:
 0.04            #Molar_Volume(1/M)
 
 Dynamic:
-1.              #Voltage_Difference(V)
+9.              #Voltage_Difference(V)
 20.0            #Temperature(°C)
 0.733E-5        #Diffusivity(cm^2/s)
 2               #Oxidation_Number
