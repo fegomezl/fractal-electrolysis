@@ -1,6 +1,6 @@
 #include "header.h"
 
-double system_evolve(const Config &config, Crandom &random, std::vector<bool> &domain, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, std::vector<double> &particles){
+double system_evolve(const Config &config, const double dt, Crandom &random, std::vector<bool> &domain, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, std::vector<double> &particles){
     /****
      * Move particles according to the Smoluchowski Diffusion Equation.
      *
@@ -46,8 +46,8 @@ double system_evolve(const Config &config, Crandom &random, std::vector<bool> &d
                + (x-x0)*(y-y0)*electric_field[1][x1+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n];
         }
 
-        particles[2*ii]   += config.mu*Ex + config.sigma*random.gauss(0., 1.);
-        particles[2*ii+1] += config.mu*Ey + config.sigma*random.gauss(0., 1.);
+        particles[2*ii]   += config.mu*dt*Ex + config.sigma*std::sqrt(dt)*random.gauss(0., 1.);
+        particles[2*ii+1] += config.mu*dt*Ey + config.sigma*std::sqrt(dt)*random.gauss(0., 1.);
     }
 
     bool liquid = 0;

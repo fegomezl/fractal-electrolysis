@@ -12,16 +12,21 @@ int main (int argc, char **argv){
     std::vector<bool> domain(config.N);
     std::vector<double> particles;
     std::vector<double> phi(config.N);
-    std::vector<double> electric_field_x(config.N,0.0);
-    std::vector<double> electric_field_y(config.N,0.0);
+    std::vector<double> electric_field_x(config.N, 0.0);
+    std::vector<double> electric_field_y(config.N, 0.0);
     std::vector<std::vector<double>> electric_field = {electric_field_x, electric_field_y};
 
     Crandom random(config.seed);
-    int ii = 0, iter = 0;
-    int printed = 0;
-    int n_particles = particles.size();
+    int iteration = 0;
     double t = 0.;
-    double total_res = 0.;
+    double dt = config.dt_init;
+    bool last = false;
+    int vis_iteration = 0;
+    int vis_steps = config.vis_steps_max;
+    int vis_print = 0;
+    int relax_iter = 0;
+    double relax_res = 0.;
+    int n_particles = particles.size();
 
     if (config.verbose){
         std::cout << std::left << std::setw(12)
@@ -30,6 +35,7 @@ int main (int argc, char **argv){
                   << "Progress" << std::setw(12)
                   << "Step" << std::setw(12)
                   << "Time" << std::setw(12)
+                  << "Dt" << std::setw(12)
                   << "Printed" << std::setw(12)
                   << "Iterations" << std::setw(15)
                   << "Converged" << std::setw(15)
@@ -44,63 +50,60 @@ int main (int argc, char **argv){
     if (config.verbose){
         std::cout << std::left << std::setw(12)
                   << "0%" << std::setw(12)
-                  << ii << std::setw(12)
+                  << iteration << std::setw(12)
                   << t  << std::setw(12)
-                  << printed << std::setw(12)
-                  << iter << std::setw(15)
-                  << total_res << std::setw(15)
+                  << dt  << std::setw(12)
+                  << vis_print << std::setw(12)
+                  << relax_iter << std::setw(15)
+                  << relax_res << std::setw(15)
                   << n_particles 
                   << "\r";
         std::cout.flush();
     }
 
-    for (ii = 1; ii <= config.iterations; ii++){
+    for (iteration = 1, vis_iteration = 1; !last; iteration++, vis_iteration++){
 
-        n_particles = system_evolve(config, random, domain, phi, electric_field, particles);
-        auto [iter,total_res] = relaxation(config, domain, phi, electric_field);
+        //Update iteration parameters
+        last = (t >= config.t_final - 1e-8*config.dt_init);
+        dt = std::min(dt, config.t_final - t);
 
-        if (ii%config.vis_iterations == 0){
-            printed += 1;
-            print(config, domain, phi, electric_field, particles, "results/data/data_"+std::to_string(printed));
+        //Perform a time step
+        n_particles = system_evolve(config, dt, random, domain, phi, electric_field, particles);
+
+        //Update visualization steps
+        vis_steps = (dt == config.dt_init) ? config.vis_steps_max : int((config.dt_init/dt)*config.vis_steps_max);
+
+        //Calculate new electric field
+        auto [relax_iter, relax_res] = relaxation(config, dt, domain, phi, electric_field);
+
+        if (last || vis_steps <= vis_iteration){
+            //Update parameters
+            vis_iteration = 0;
+            vis_print += 1;
+
+            print(config, domain, phi, electric_field, particles, "results/data/data_"+std::to_string(vis_print));
         }
 
         if (config.verbose){
             std::cout << std::left << std::setw(12)
-                      << std::to_string((int)100*ii/config.iterations)+"%" << std::setw(12)
-                      << ii << std::setw(12)
-                      << ii*config.dt  << std::setw(12)
-                      << printed << std::setw(12)
-                      << iter << std::setw(15)
-                      << total_res << std::setw(15)
+                      << std::to_string((int)100*t/config.t_final)+"%" << std::setw(12)
+                      << iteration << std::setw(12)
+                      << t  << std::setw(12)
+                      << dt  << std::setw(12)
+                      << vis_print << std::setw(12)
+                      << relax_iter << std::setw(15)
+                      << relax_res << std::setw(15)
                       << n_particles 
                       << "\r";
             std::cout.flush();
         }
 
-        if (n_particles == 0)
+        if (n_particles == 0){
+            if (config.verbose)
+                std::cout << "No more particles.\n";
             break;
-    }
-
-    if ((ii-1)%config.vis_iterations != 0){
-        printed += 1;
-        print(config, domain, phi, electric_field, particles, "results/data/data_"+std::to_string(printed));
-
-        if (config.verbose){
-            std::cout << std::left << std::setw(12)
-                      << std::to_string((int)100*ii/config.iterations)+"%" << std::setw(12)
-                      << ii << std::setw(12)
-                      << ii*config.dt  << std::setw(12)
-                      << printed << std::setw(12)
-                      << iter << std::setw(15)
-                      << total_res << std::setw(15)
-                      << n_particles 
-                      << "\r";
-            std::cout.flush();
         }
     }
-
-    if (n_particles == 0 && config.verbose)
-        std::cout << "No more particles.\n";
 
     auto t2 = high_resolution_clock::now();
     duration<double> ms_double = t2 - t1;

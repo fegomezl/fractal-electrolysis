@@ -1,6 +1,6 @@
 #include "header.h"
 
-std::tuple<int,double> relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field){
+std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field){
     int i=0,j=0,iter=0;
     double R=0,TotalRes=0;
     auto phi_new = phi;
@@ -34,7 +34,7 @@ std::tuple<int,double> relaxation(const Config &config, const std::vector<bool> 
     return {iter,TotalRes};
 }
 
-std::tuple<int,double> relaxation(const Config &config, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, bool verbose){
+std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, bool verbose){
     int i=0,j=0,iter=0;
     double R=0,TotalRes=0;
     auto phi_new = phi;
