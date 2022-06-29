@@ -1,8 +1,14 @@
 #include "header.h"
 
-void print(const Config &config, const std::vector<bool> &domain, const std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, const std::vector<double> &particles, const std::string folder){
+void print(const Config &config, double t, const std::vector<bool> &domain, const std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, const std::vector<double> &particles, const std::string folder){
 
     std::filesystem::create_directory(folder);
+
+    //Print time
+    std::ofstream print_time;
+    print_time.open(folder+"/time.txt", std::ios::trunc);
+    print_time << t;
+    print_time.close();
     
     /****
      * Print values of field in each position.

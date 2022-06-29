@@ -19,8 +19,7 @@ Config::Config(){
     verbose = std::stoi(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    //iterations = std::stoi(line.erase(line.find('#'), line.size()));
-    t_final = 3600.;
+    t_final = std::stoi(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
     vis_steps_max = std::stoi(line.erase(line.find('#'), line.size()));
@@ -77,13 +76,13 @@ Config::Config(){
     double T = std::stod(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    double diffusivity = std::stod(line.erase(line.find('#'), line.size()));
+    diffusivity = std::stod(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
     double oxidation = std::stoi(line.erase(line.find('#'), line.size()));
 
     std::getline(parameters,line);
-    double electro_boltzmann = std::stod(line.erase(line.find('#'), line.size()));
+    double boltzmann = std::stod(line.erase(line.find('#'), line.size()));
 
     parameters.close();
 
@@ -93,9 +92,12 @@ Config::Config(){
 
     N = n*n;
     l = L/n; 
+
     particle_proportion = molarity*molar_volume;
+    V_ref = boltzmann*(T+273.15)/oxidation;
+
     sigma = sqrt(2*diffusivity);
-    mu = electro_boltzmann*oxidation*diffusivity/(T+273.15); 
+    mu = diffusivity/V_ref; 
 }
 
 double initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, std::vector<double> &particles){

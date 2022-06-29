@@ -20,6 +20,7 @@ int main (int argc, char **argv){
     int iteration = 0;
     double t = 0.;
     double dt = config.dt_init;
+    double dt_old = dt;
     bool last = false;
     int vis_iteration = 0;
     int vis_steps = config.vis_steps_max;
@@ -45,14 +46,24 @@ int main (int argc, char **argv){
     }
 
     n_particles = initialization(config, domain, phi, electric_field, particles);
-    print(config, domain, phi, electric_field, particles);
+
+    {
+        //Update corresponding time_step
+        double EMax = config.V/(config.Rint*log(config.Rext/config.Rint));
+        double a = config.diffusivity*std::pow(EMax/config.V_ref, 2);
+        double b = EMax*config.l/config.V_ref;
+        dt = std::min(config.dt_init, (1+b+std::sqrt(1+2*b))/a);
+        dt_old = dt;
+    }
+
+    print(config, t, domain, phi, electric_field, particles);
 
     if (config.verbose){
         std::cout << std::left << std::setw(12)
                   << "0%" << std::setw(12)
                   << iteration << std::setw(12)
                   << t  << std::setw(12)
-                  << dt  << std::setw(12)
+                  << dt_old << std::setw(12)
                   << vis_print << std::setw(12)
                   << relax_iter << std::setw(15)
                   << relax_res << std::setw(15)
@@ -69,11 +80,13 @@ int main (int argc, char **argv){
 
         //Perform a time step
         n_particles = system_evolve(config, dt, random, domain, phi, electric_field, particles);
+        t += dt;
 
         //Update visualization steps
         vis_steps = (dt == config.dt_init) ? config.vis_steps_max : int((config.dt_init/dt)*config.vis_steps_max);
 
         //Calculate new electric field
+        dt_old = dt;
         auto [relax_iter, relax_res] = relaxation(config, dt, domain, phi, electric_field);
 
         if (last || vis_steps <= vis_iteration){
@@ -81,15 +94,15 @@ int main (int argc, char **argv){
             vis_iteration = 0;
             vis_print += 1;
 
-            print(config, domain, phi, electric_field, particles, "results/data/data_"+std::to_string(vis_print));
+            print(config, t, domain, phi, electric_field, particles, "results/data/data_"+std::to_string(vis_print));
         }
 
         if (config.verbose){
             std::cout << std::left << std::setw(12)
-                      << std::to_string((int)100*t/config.t_final)+"%" << std::setw(12)
+                      << std::to_string((int)(100*t/config.t_final))+"%" << std::setw(12)
                       << iteration << std::setw(12)
                       << t  << std::setw(12)
-                      << dt  << std::setw(12)
+                      << dt_old  << std::setw(12)
                       << vis_print << std::setw(12)
                       << relax_iter << std::setw(15)
                       << relax_res << std::setw(15)

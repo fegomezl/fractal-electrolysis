@@ -13,7 +13,7 @@ def main():
     path = 'results/data'
     n=len(next(os.walk(path))[1])-1
 
-    fields, particles, bit_map = load_data(config,n)
+    fields, particles, bit_map, t = load_data(config,n)
     bit_map = 1 - np.reshape(bit_map, (-1, config.n))
     image = np.array(bit_map * 255, dtype = np.uint8)
 

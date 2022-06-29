@@ -8,6 +8,7 @@ def load_data(config, ii):
         fields = np.loadtxt('results/data/data_'+str(ii)+'/fields_0.dat')
         particles = np.loadtxt('results/data/data_'+str(ii)+'/particles_0.dat')
         bit_map = np.loadtxt('results/data/data_'+str(ii)+'/bit_map_0.dat')
+        t = np.loadtxt('results/data/data_'+str(ii)+'/time.txt')
         for jj in range(1, config.nproc):
             fields = np.concatenate((fields, np.loadtxt('results/data/data_'+str(ii)+'/fields_'+str(jj)+'.dat')))
             particles = np.concatenate((particles, np.loadtxt('results/data/data_'+str(ii)+'/particles_'+str(jj)+'.dat')))
@@ -18,6 +19,7 @@ def load_data(config, ii):
             fields = np.loadtxt('results/data/data_'+str(ii)+'/fields_0.dat')
             particles = np.loadtxt('results/data/data_'+str(ii)+'/particles_0.dat')
             bit_map = np.loadtxt('results/data/data_'+str(ii)+'/bit_map_0.dat')
+            t = np.loadtxt('results/data/data_'+str(ii)+'/time.txt')
             for jj in range(1, nproc):
                 fields = np.concatenate((fields, np.loadtxt('results/data/data_'+str(ii)+'/fields_'+str(jj)+'.dat')))
                 particles = np.concatenate((particles, np.loadtxt('results/data/data_'+str(ii)+'/particles_'+str(jj)+'.dat')))
@@ -27,7 +29,7 @@ def load_data(config, ii):
             print('No data.')
             exit()
 
-    return fields, particles, bit_map
+    return fields, particles, bit_map, t
 
 class Config(object):
 
@@ -77,7 +79,7 @@ class Config(object):
 
         parameters.close()
         
-def plot_fileds_and_particles(config,fields,particles,bit_map,X,Y,U,V,ii,d3):
+def plot_fileds_and_particles(config,fields,particles,bit_map,X,Y,U,V,ii,d3,t):
     #Transform data
     domain = fields[:,0]
     phi = fields[:,1]
@@ -103,7 +105,7 @@ def plot_fileds_and_particles(config,fields,particles,bit_map,X,Y,U,V,ii,d3):
     fig = plt.figure(figsize=(10,10))
     grid = gs.GridSpec(3, 2)
 
-    fig.suptitle('t = '+str(ii*config.dt)+' s')
+    fig.suptitle('t = '+str(t)+' s')
 
     #Particles and domain
     ax = plt.subplot(grid[:-1, :])

@@ -32,6 +32,8 @@ struct Config{
     double Rext;
 
     double particle_proportion;
+    double diffusivity;
+    double V_ref;
 
     double V;
     double sigma;
@@ -74,7 +76,7 @@ double initialization(const Config &config, std::vector<bool> &domain, std::vect
 std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field);
 std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const bool verbose);
 
-void print(const Config &config, const std::vector<bool> &domain, const std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, const std::vector<double> &particles, const std::string folder = "results/data/data_0"); 
+void print(const Config &config, double t, const std::vector<bool> &domain, const std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, const std::vector<double> &particles, const std::string folder = "results/data/data_0"); 
 
 double system_evolve(const Config &config, const double dt, Crandom &random, std::vector<bool> &domain, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, std::vector<double> &particles);
 

@@ -2,7 +2,7 @@
 
 std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field){
     int i=0,j=0,iter=0;
-    double R=0,TotalRes=0;
+    double R=0,TotalRes=0,EMax=0;
     auto phi_new = phi;
 
     //array[j][i] -> array[i+n*j] j->y, i->x
@@ -24,12 +24,20 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
         phi = phi_new;
     }
 
-    #pragma omp parallel for private(j,i) schedule(guided)
-    for(j = 1; j < config.n-1; j++)
+    #pragma omp parallel for private(j,i) schedule(guided) reduction(max: EMax)
+    for(j = 1; j < config.n-1; j++){
         for(i = 1; i < config.n-1; i++) {
             electric_field[0][i+config.n*j] = -(phi[i+1+config.n*j]-phi[i-1+config.n*j])/(2*config.l); //center deriv
             electric_field[1][i+config.n*j] = -(phi[i+config.n*(j+1)]-phi[i+config.n*(j-1)])/(2*config.l); //center deriv
+            double ELocal = std::hypot(electric_field[0][i+config.n*j], electric_field[1][i+config.n*j]);
+            EMax = EMax > ELocal ? EMax : ELocal;
         }
+    }
+
+    //Update corresponding time_step
+    double a = config.diffusivity*std::pow(EMax/config.V_ref, 2);
+    double b = EMax*config.l/config.V_ref;
+    dt = std::min(config.dt_init, (1+b+std::sqrt(1+2*b))/a);
 
     return {iter,TotalRes};
 }
