@@ -36,8 +36,8 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
 
     //Update corresponding time_step
     double a = config.diffusivity*std::pow(EMax/config.V_ref, 2);
-    double b = EMax*config.l/config.V_ref;
-    dt = std::min(config.dt_init, (1+b+std::sqrt(1+2*b))/a);
+    double b = EMax*config.l/(2*config.V_ref);
+    dt = std::min(config.dt_init, (4+b+std::sqrt(16+8*b))/a);
 
     return {iter,TotalRes};
 }

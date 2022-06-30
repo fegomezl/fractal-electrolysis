@@ -16,7 +16,7 @@ Simulation:
 1               #Verbose
 3600            #Time(s)
 10             #Visualitaion_Rate
-251             #Number_of_Elements(Lenghtwise)
+529             #Number_of_Elements(Lenghtwise)
 
 Algorithms:
 50              #Random_Seed
@@ -25,9 +25,9 @@ Algorithms:
 1E-6            #Relaxation_Max_Residue
 
 Kinematic:
-100.0             #Time_Resolution(s)
+10.0             #Time_Resolution(s)
 8.0             #Box_Size(cm)
-0.15            #Internal_Radius(cm)
+0.05            #Internal_Radius(cm)
 4.0             #External_Radius(cm)
 
 Proportion:
