@@ -98,6 +98,28 @@ Config::Config(){
 
     sigma = sqrt(2*diffusivity);
     mu = diffusivity/V_ref; 
+
+    std::cout << "nproc = " << nproc << std::endl;
+    std::cout << "verbose = " << verbose << std::endl;
+    std::cout << "t_final = " << t_final << std::endl;
+    std::cout << "dt_init = " << dt_init << std::endl;
+    std::cout << "vis_steps_max = " << vis_steps_max << std::endl;
+    std::cout << "n = " << n << std::endl;
+    std::cout << "N = " << N << std::endl;
+    std::cout << "seed = " << seed << std::endl;
+    std::cout << "relax_alpha = " << relax_alpha << std::endl;
+    std::cout << "relax_max_iter = " << relax_max_iter << std::endl;
+    std::cout << "relax_res = " << relax_res << std::endl;
+    std::cout << "l = " << l << std::endl;
+    std::cout << "L = " << L << std::endl;
+    std::cout << "Rint = " << Rint << std::endl;
+    std::cout << "Rext = " << Rext << std::endl;
+    std::cout << "particle_proportion = " << particle_proportion << std::endl;
+    std::cout << "diffusivity = " << diffusivity << std::endl;
+    std::cout << "V_ref = " << V_ref << std::endl;
+    std::cout << "V = " << V << std::endl;
+    std::cout << "sigma = " << sigma << std::endl;
+    std::cout << " mu " << mu << std::endl;
 }
 
 double initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, std::vector<double> &particles){

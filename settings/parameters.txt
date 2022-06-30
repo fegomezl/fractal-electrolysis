@@ -15,13 +15,13 @@ Simulation:
 4               #Threads
 1               #Verbose
 3600            #Time(s)
-10             #Visualitaion_Rate
+2               #Visualitaion_Rate
 529             #Number_of_Elements(Lenghtwise)
 
 Algorithms:
 50              #Random_Seed
 1.0             #Relaxation_Alpha
-1E+4            #Relaxation_Max_Iterations
+1E+5            #Relaxation_Max_Iterations
 1E-6            #Relaxation_Max_Residue
 
 Kinematic:
@@ -35,7 +35,7 @@ Proportion:
 0.04            #Molar_Volume(1/M)
 
 Dynamic:
-9.              #Voltage_Difference(V)
+5.              #Voltage_Difference(V)
 20.0            #Temperature(°C)
 0.733E-5        #Diffusivity(cm^2/s)
 2               #Oxidation_Number
