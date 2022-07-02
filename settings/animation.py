@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-
+import os
 from tools import *
 
 def init():
@@ -29,6 +29,9 @@ def animate(n,config,quad1,quad2,ax):
 def main():
     #Parameters from the domain
     config = Config()
+
+    path = 'results/data'
+    frames = len(next(os.walk(path))[1])-1
     
     #Grid
     x = np.linspace(-config.L/2, config.L/2, config.n+1)
@@ -68,7 +71,7 @@ def main():
     clb.set_label('Particle Density')
     quad1 = plt.pcolormesh(X, Y, Domain, cmap=cmap_rb)
 
-    anim = animation.FuncAnimation(fig,animate,fargs=(config,quad1,quad2,ax1,),frames=26,interval=1,blit=False,repeat=False)
+    anim = animation.FuncAnimation(fig,animate,fargs=(config,quad1,quad2,ax1,),frames=frames,interval=1,blit=False,repeat=False)
     anim.save('animation.gif', writer='imagemagick', fps=config.fps)
 
 
