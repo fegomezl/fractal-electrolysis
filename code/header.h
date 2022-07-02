@@ -39,7 +39,7 @@ struct Config{
     double sigma;
     double mu;
 
-    double E_cte = 2.8799e-9/(l*l);
+    double E_cte = 2.8799e-9;
 };
 
 class Crandom{

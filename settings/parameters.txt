@@ -16,7 +16,7 @@ Simulation:
 1               #Verbose
 1000            #Time(s)
 20              #Visualitaion_Rate
-529             #Number_of_Elements(Lenghtwise)
+329             #Number_of_Elements(Lenghtwise)
 
 Algorithms:
 50              #Random_Seed

@@ -2,7 +2,7 @@
 
 std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::vector<int> &density){
     int i=0,j=0,iter=0;
-    double R=0,TotalRes=0,EMax=0;
+    double R=0,TotalRes=0,EMax=0,sumx=0,sumy=0;
     auto phi_new = phi;
     std::vector<std::vector<double>> Grad_N = {electric_field[0], electric_field[1]};
 
@@ -37,21 +37,27 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
         }
     }
 
+
     for (int k = 0; k < config.N; k++)
     {
-        double sumx = 0;
-        double sumy = 0;
+        sumx = 0;
+        sumy = 0;
+        int ii = k%config.n;
+        int jj = k/config.n;
 
+        #pragma omp parallel for default(none) shared(Grad_N,ii,jj,config) reduction(+: sumx, sumy)
         for (int kk = 0; kk < config.N; kk++)
         {   
-            double r2 = std::pow(k%config.n-kk%config.n,2)+std::pow(int(k/config.n)-int(kk/config.n),2);
-            r2 = std::sqrt(r2)/(r2+1e-10)
+            int iip = kk%config.n;
+            int jjp = kk/config.n;
+            double r2 = std::pow(ii-iip,2)+std::pow(jj-jjp,2);
+            r2 = std::sqrt(r2)/(r2+1e-8);
             sumx+=Grad_N[0][kk]*r2;
             sumy+=Grad_N[1][kk]*r2;
         }
 
-        electric_field[0]+=E_cte*sumx;
-        electric_field[1]+=E_cte*sumy;
+        electric_field[0][k]+=config.E_cte*sumx;
+        electric_field[1][k]+=config.E_cte*sumy;
     }
 
     //Update corresponding time_step

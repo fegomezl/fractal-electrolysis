@@ -99,6 +99,8 @@ Config::Config(){
     sigma = sqrt(2*diffusivity);
     mu = diffusivity/V_ref; 
 
+    E_cte /= l*l;
+
     std::cout << "nproc = " << nproc << std::endl;
     std::cout << "verbose = " << verbose << std::endl;
     std::cout << "t_final = " << t_final << std::endl;
