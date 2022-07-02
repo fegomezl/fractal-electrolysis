@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <omp.h>
 
 struct Config{
@@ -39,7 +40,8 @@ struct Config{
     double sigma;
     double mu;
 
-    double E_cte = 2.8799e-9;
+    double E_cte = 3.599875e-9;
+    int m=70;
 };
 
 class Crandom{
