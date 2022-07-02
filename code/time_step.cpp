@@ -26,9 +26,7 @@ double system_evolve(const Config &config, const double dt, Crandom &random, std
     double Ex=0., Ey=0.;
 
     //Reset Density counts
-    for(auto &i: density)
-        i=0;
-
+    std::fill(density.begin(), density.end(), 0);
 
     for (long unsigned int ii = 0; ii < particles.size()/2; ii++){
 

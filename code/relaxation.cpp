@@ -5,6 +5,7 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
     double R=0,TotalRes=0,EMax=0,sumx=0,sumy=0;
     auto phi_new = phi;
     std::vector<std::vector<double>> Grad_N = {electric_field[0], electric_field[1]};
+    int y0, yf, x0, xf;
 
     //array[j][i] -> array[i+n*j] j->y, i->x
     for (iter = 0; iter < config.relax_max_iter; ++iter)
@@ -36,26 +37,29 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
         }
     }
 
-    #pragma omp parallel for private(j,i) schedule(guided) reduction(max: EMax)
+    #pragma omp parallel for private(j,i,sumx,sumy,y0,x0,yf,xf) schedule(guided) reduction(max: EMax)
     for(j = 1; j < config.n-1; j++)
         for(i = 1; i < config.n-1; i++) {
             sumx = 0;
             sumy = 0;
-            int Iy = std::min({j, config.n-j, config.m});
-            int Ix = std::min({i, config.n-i, config.m});
+            y0 = std::min(1,j-config.m);
+            x0 = std::min(1,i-config.m);
+            yf = std::min(j+config.m,config.n-1);
+            xf = std::min(i+config.m,config.n-1);
 
-            for(int jj = j-Iy; jj < j+Iy; jj++)
-                for(int ii = i-Ix; ii < i-Ix; ii++) {
-                    double r2 = (i-ii)*(i-ii)+(j-jj)*(j-jj);
-                    r2 = std::sqrt(r2)/(r2+1e-8);
+            for(int jj = y0; jj < yf; jj++)
+                for(int ii = x0; ii < xf; ii++) {
+                    double r2 = config.l*config.l*((i-ii)*(i-ii)+(j-jj)*(j-jj));
+                    r2 = std::sqrt(r2)/(r2+config.l*1e-5);
                     sumx+=Grad_N[0][ii+config.n*jj]*r2;
                     sumy+=Grad_N[1][ii+config.n*jj]*r2;
             }
 
-            electric_field[0][i+config.n*j]+=config.E_cte*sumx;
-            electric_field[1][i+config.n*j]+=config.E_cte*sumy;
+            electric_field[0][i+config.n*j]-=config.E_cte*sumx*domain[i+config.n*j];
+            electric_field[1][i+config.n*j]-=config.E_cte*sumy*domain[i+config.n*j];
 
             EMax = std::max(EMax,std::hypot(electric_field[0][i+config.n*j], electric_field[1][i+config.n*j]));
+
     }
 
 

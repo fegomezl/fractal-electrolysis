@@ -84,6 +84,12 @@ Config::Config(){
     std::getline(parameters,line);
     double boltzmann = std::stod(line.erase(line.find('#'), line.size()));
 
+    std::getline(parameters,line);
+    E_cte = std::stod(line.erase(line.find('#'), line.size()));
+
+    std::getline(parameters,line);
+    double I_cutoff = std::stod(line.erase(line.find('#'), line.size()));
+
     parameters.close();
 
     /****
@@ -99,7 +105,8 @@ Config::Config(){
     sigma = sqrt(2*diffusivity);
     mu = diffusivity/V_ref; 
 
-    E_cte /= l*l;
+    E_cte/=(l*l);
+    m = I_cutoff/l;
 
     std::cout << "nproc = " << nproc << std::endl;
     std::cout << "verbose = " << verbose << std::endl;
@@ -118,6 +125,11 @@ Config::Config(){
     std::cout << "Rext = " << Rext << std::endl;
     std::cout << "particle_proportion = " << particle_proportion << std::endl;
     std::cout << "diffusivity = " << diffusivity << std::endl;
+    std::cout << "oxidation = " << oxidation << std::endl;
+    std::cout << "boltzmann = " << boltzmann << std::endl;
+    std::cout << "E_cte = " << E_cte << std::endl;
+    std::cout << "I_cutoff = " << I_cutoff << std::endl;
+    std::cout << "m = " << m << std::endl;
     std::cout << "V_ref = " << V_ref << std::endl;
     std::cout << "V = " << V << std::endl;
     std::cout << "sigma = " << sigma << std::endl;
@@ -141,7 +153,7 @@ double initialization(const Config &config, std::vector<bool> &domain, std::vect
             phi[ii] = 0.;
             electric_field[0][ii] = 0.;
             electric_field[1][ii] = 0.;
-        } else if (r >= config.Rext) {
+        } else if (r >= config.Rext*0.9) {
             domain[ii] = 0;
             phi[ii] = config.V;
             electric_field[0][ii] = 0.;

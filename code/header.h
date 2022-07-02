@@ -40,8 +40,8 @@ struct Config{
     double sigma;
     double mu;
 
-    double E_cte = 3.599875e-9;
-    int m=70;
+    double E_cte;
+    int m;
 };
 
 class Crandom{

@@ -32,21 +32,22 @@ int main (int argc, char **argv){
 
     if (config.verbose){
         std::cout << std::left << std::setw(12)
-                  << "-------------------------------------------------------------------------------------\n"
-                  << std::left << std::setw(12)
-                  << "Progress" << std::setw(12)
-                  << "Step" << std::setw(12)
-                  << "Time" << std::setw(12)
-                  << "Dt" << std::setw(12)
+                  << "-------------------------------------------------------------------------------\n"
+                  << std::left << std::setw(9)
+                  << "Progress" << std::setw(8)
+                  << "Step" << std::setw(9)
+                  << "Time" << std::setw(10)
+                  << "Dt" << std::setw(9)
                   << "Printed" << std::setw(12)
-                  << "Iterations" << std::setw(15)
-                  << "Converged" << std::setw(15)
+                  << "Iterations" << std::setw(12)
+                  << "Converged" << std::setw(9)
                   << "Particles"
-                  << std::left << std::setw(12)
-                  << "\n-------------------------------------------------------------------------------------\n";
+                  << std::left << std::setw(16)
+                  << "\n-------------------------------------------------------------------------------\n";
     }
 
     n_particles = initialization(config, domain, phi, electric_field, particles, density);
+    auto b = relaxation(config, dt, domain, phi, electric_field, density);
 
     {
         //Update corresponding time_step
@@ -60,14 +61,14 @@ int main (int argc, char **argv){
     print(config, t, domain, phi, electric_field, density);
 
     if (config.verbose){
-        std::cout << std::left << std::setw(12)
-                  << "0%" << std::setw(12)
-                  << iteration << std::setw(12)
-                  << t  << std::setw(12)
-                  << dt_old << std::setw(12)
+        std::cout << std::left << std::setw(9)
+                  << "0%" << std::setw(8)
+                  << iteration << std::setw(9)
+                  << t  << std::setw(10)
+                  << dt_old << std::setw(9)
                   << vis_print << std::setw(12)
-                  << relax_iter << std::setw(15)
-                  << relax_res << std::setw(15)
+                  << relax_iter << std::setw(12)
+                  << relax_res << std::setw(9)
                   << n_particles 
                   << "\r";
         std::cout.flush();
@@ -99,14 +100,14 @@ int main (int argc, char **argv){
         }
 
         if (config.verbose){
-            std::cout << std::left << std::setw(12)
-                      << std::to_string((int)(100*t/config.t_final))+"%" << std::setw(12)
-                      << iteration << std::setw(12)
-                      << t  << std::setw(12)
-                      << dt_old  << std::setw(12)
+            std::cout << std::left << std::setw(9)
+                      << std::to_string((int)(100*t/config.t_final))+"%" << std::setw(8)
+                      << iteration << std::setw(9)
+                      << t  << std::setw(10)
+                      << dt_old  << std::setw(9)
                       << vis_print << std::setw(12)
-                      << relax_iter << std::setw(15)
-                      << relax_res << std::setw(15)
+                      << relax_iter << std::setw(12)
+                      << relax_res << std::setw(9)
                       << n_particles 
                       << "\r";
             std::cout.flush();
