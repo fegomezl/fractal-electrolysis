@@ -14,8 +14,8 @@ K       (Kelvin)
 Simulation:
 4               #Threads
 1               #Verbose
-4               #Time(s)
-1               #Visualitaion_Rate
+1000            #Time(s)
+20              #Visualitaion_Rate
 529             #Number_of_Elements(Lenghtwise)
 
 Algorithms:

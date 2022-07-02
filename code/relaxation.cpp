@@ -4,7 +4,7 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
     int i=0,j=0,iter=0;
     double R=0,TotalRes=0,EMax=0;
     auto phi_new = phi;
-    vector<vector<double>> Grad_N(config.N, vector<double> (config.N, 0));
+    std::vector<std::vector<double>> Grad_N = {electric_field[0], electric_field[1]};
 
     //array[j][i] -> array[i+n*j] j->y, i->x
     for (iter = 0; iter < config.relax_max_iter; ++iter)
@@ -25,6 +25,7 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
         phi = phi_new;
     }
 
+    //Calculate Electric Field and Density Gradient
     #pragma omp parallel for private(j,i) schedule(guided) reduction(max: EMax)
     for(j = 1; j < config.n-1; j++){
         for(i = 1; i < config.n-1; i++) {
@@ -34,6 +35,23 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
             Grad_N[1][i+config.n*j] = (density[i+config.n*(j+1)]-density[i+config.n*(j-1)])/2.0;
             EMax = std::max(EMax,std::hypot(electric_field[0][i+config.n*j], electric_field[1][i+config.n*j]));
         }
+    }
+
+    for (int k = 0; k < config.N; k++)
+    {
+        double sumx = 0;
+        double sumy = 0;
+
+        for (int kk = 0; kk < config.N; kk++)
+        {   
+            double r2 = std::pow(k%config.n-kk%config.n,2)+std::pow(int(k/config.n)-int(kk/config.n),2);
+            r2 = std::sqrt(r2)/(r2+1e-10)
+            sumx+=Grad_N[0][kk]*r2;
+            sumy+=Grad_N[1][kk]*r2;
+        }
+
+        electric_field[0]+=E_cte*sumx;
+        electric_field[1]+=E_cte*sumy;
     }
 
     //Update corresponding time_step
