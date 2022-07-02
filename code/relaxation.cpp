@@ -1,9 +1,10 @@
 #include "header.h"
 
-std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field){
+std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::vector<int> &density){
     int i=0,j=0,iter=0;
     double R=0,TotalRes=0,EMax=0;
     auto phi_new = phi;
+    vector<vector<double>> Grad_N(config.N, vector<double> (config.N, 0));
 
     //array[j][i] -> array[i+n*j] j->y, i->x
     for (iter = 0; iter < config.relax_max_iter; ++iter)
@@ -29,8 +30,9 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
         for(i = 1; i < config.n-1; i++) {
             electric_field[0][i+config.n*j] = -(phi[i+1+config.n*j]-phi[i-1+config.n*j])/(2*config.l); //center deriv
             electric_field[1][i+config.n*j] = -(phi[i+config.n*(j+1)]-phi[i+config.n*(j-1)])/(2*config.l); //center deriv
-            double ELocal = std::hypot(electric_field[0][i+config.n*j], electric_field[1][i+config.n*j]);
-            EMax = EMax > ELocal ? EMax : ELocal;
+            Grad_N[0][i+config.n*j] = (density[i+1+config.n*j]-density[i-1+config.n*j])/2.0;
+            Grad_N[1][i+config.n*j] = (density[i+config.n*(j+1)]-density[i+config.n*(j-1)])/2.0;
+            EMax = std::max(EMax,std::hypot(electric_field[0][i+config.n*j], electric_field[1][i+config.n*j]));
         }
     }
 
@@ -42,7 +44,7 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
     return {iter,TotalRes};
 }
 
-std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, bool verbose){
+std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::vector<int> &density, bool verbose){
     int i=0,j=0,iter=0;
     double R=0,TotalRes=0;
     auto phi_new = phi;

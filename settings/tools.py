@@ -5,31 +5,27 @@ from matplotlib import cm
 
 def load_data(config, ii):
     try:
-        fields = np.loadtxt('results/data/data_'+str(ii)+'/fields_0.dat')
-        particles = np.loadtxt('results/data/data_'+str(ii)+'/particles_0.dat')
-        bit_map = np.loadtxt('results/data/data_'+str(ii)+'/bit_map_0.dat')
+        fields = np.loadtxt('results/data/data_'+str(ii)+'/fields_0.dat',delimiter=',')
+        bit_map = np.loadtxt('results/data/data_'+str(ii)+'/bit_map_0.dat',delimiter=',')
         t = np.loadtxt('results/data/data_'+str(ii)+'/time.txt')
         for jj in range(1, config.nproc):
-            fields = np.concatenate((fields, np.loadtxt('results/data/data_'+str(ii)+'/fields_'+str(jj)+'.dat')))
-            particles = np.concatenate((particles, np.loadtxt('results/data/data_'+str(ii)+'/particles_'+str(jj)+'.dat')))
-            bit_map = np.concatenate((bit_map, np.loadtxt('results/data/data_'+str(ii)+'/bit_map_'+str(jj)+'.dat')))
+            fields = np.concatenate((fields, np.loadtxt('results/data/data_'+str(ii)+'/fields_'+str(jj)+'.dat',delimiter=',')))
+            bit_map = np.concatenate((bit_map, np.loadtxt('results/data/data_'+str(ii)+'/bit_map_'+str(jj)+'.dat',delimiter=',')))
     except:
         try:
             ii = 0
-            fields = np.loadtxt('results/data/data_'+str(ii)+'/fields_0.dat')
-            particles = np.loadtxt('results/data/data_'+str(ii)+'/particles_0.dat')
-            bit_map = np.loadtxt('results/data/data_'+str(ii)+'/bit_map_0.dat')
+            fields = np.loadtxt('results/data/data_'+str(ii)+'/fields_0.dat',delimiter=',')
+            bit_map = np.loadtxt('results/data/data_'+str(ii)+'/bit_map_0.dat',delimiter=',')
             t = np.loadtxt('results/data/data_'+str(ii)+'/time.txt')
             for jj in range(1, nproc):
-                fields = np.concatenate((fields, np.loadtxt('results/data/data_'+str(ii)+'/fields_'+str(jj)+'.dat')))
-                particles = np.concatenate((particles, np.loadtxt('results/data/data_'+str(ii)+'/particles_'+str(jj)+'.dat')))
-                bit_map = np.concatenate((bit_map, np.loadtxt('results/data/data_'+str(ii)+'/fields_'+str(jj)+'.dat')))
+                fields = np.concatenate((fields, np.loadtxt('results/data/data_'+str(ii)+'/fields_'+str(jj)+'.dat',delimiter=',')))
+                bit_map = np.concatenate((bit_map, np.loadtxt('results/data/data_'+str(ii)+'/fields_'+str(jj)+'.dat',delimiter=',')))
             print('Set default to initial data.')
         except:
             print('No data.')
             exit()
 
-    return fields, particles, bit_map, t
+    return fields, bit_map, t
 
 class Config(object):
 
@@ -79,7 +75,7 @@ class Config(object):
 
         parameters.close()
         
-def plot_fileds_and_particles(config,fields,particles,bit_map,X,Y,U,V,ii,d3,t):
+def plot_fileds_and_particles(config,fields,bit_map,X,Y,U,V,ii,d3,t):
     #Transform data
     domain = fields[:,0]
     phi = fields[:,1]
@@ -96,13 +92,6 @@ def plot_fileds_and_particles(config,fields,particles,bit_map,X,Y,U,V,ii,d3,t):
     density = np.reshape(density, (-1, config.n))
     Electric_field = np.reshape(electric_field, (-1, config.n))
 
-    try:
-        pos_x = np.append(particles[:,0], [2*config.L])
-        pos_y = np.append(particles[:,1], [2*config.L])
-    except:
-        pos_x = [2*config.L]
-        pos_y = [2*config.L]
-
     #Plot fields and particles
     fig = plt.figure(figsize=(10,10))
     grid = gs.GridSpec(3, 2)
@@ -112,8 +101,14 @@ def plot_fileds_and_particles(config,fields,particles,bit_map,X,Y,U,V,ii,d3,t):
     #Particles and domain
     ax = plt.subplot(grid[:-1, :])
     ax.set(xlim=(-config.L/2, config.L/2), ylim=(-config.L/2, config.L/2))
-    plt.pcolormesh(X, Y, Domain, cmap = cm.binary_r)
-    plt.scatter(pos_x, pos_y, marker='o', s=1)
+    plt.pcolormesh(X, Y, density, cmap = cm.Blues)
+    plt.colorbar()
+
+    c_white = cm.colors.colorConverter.to_rgba('white',alpha = 0)
+    c_black= cm.colors.colorConverter.to_rgba('black',alpha = 1)
+    cmap_rb = cm.colors.LinearSegmentedColormap.from_list('rb_cmap',[c_black,c_white],255)
+
+    plt.pcolormesh(X, Y, Domain, cmap=cmap_rb)
 
     #Electric potential
     ax = plt.subplot(grid[2, 0])
@@ -132,10 +127,6 @@ def plot_fileds_and_particles(config,fields,particles,bit_map,X,Y,U,V,ii,d3,t):
 
     #Color map
     plt.pcolormesh(X, Y, bit_map, cmap = cm.binary_r)
-    plt.show()
-
-    plt.pcolormesh(X, Y, density, cmap = cm.Reds)
-    plt.colorbar()
     plt.show()
 
     if (d3 != '3d'):

@@ -26,9 +26,8 @@ double system_evolve(const Config &config, const double dt, Crandom &random, std
     double Ex=0., Ey=0.;
 
     //Reset Density counts
-    #pragma omp parallel for default(none) shared(density, config)
-    for(int j = 0; j < config.N; j++)
-        density[j]=0;
+    for(auto &i: density)
+        i=0;
 
 
     for (long unsigned int ii = 0; ii < particles.size()/2; ii++){
@@ -56,7 +55,7 @@ double system_evolve(const Config &config, const double dt, Crandom &random, std
         particles[2*ii+1] += config.mu*dt*Ey + config.sigma*std::sqrt(dt)*random.gauss(0., 1.);
 
         //Density count
-        density[x+config.n*y]+=1;
+        density[x0+(config.n-1)/2 + (y0+(config.n-1)/2)*config.n]+=1;
     }
 
     bool liquid = 0;

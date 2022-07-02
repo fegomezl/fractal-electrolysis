@@ -17,7 +17,7 @@ def main():
 
     #Load data
     ii = int(sys.argv[1])
-    fields, particles, bit_map, t = load_data(config,ii)
+    fields, bit_map, t = load_data(config,ii)
 
     #Plot data
     try:
@@ -25,7 +25,7 @@ def main():
     except:
         d3 = None
 
-    plot_fileds_and_particles(config,fields,particles,bit_map,X,Y,U,V,ii,d3,t)
+    plot_fileds_and_particles(config,fields,bit_map,X,Y,U,V,ii,d3,t)
 
 if __name__ == '__main__':
     main()

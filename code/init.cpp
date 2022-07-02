@@ -165,13 +165,7 @@ double initialization(const Config &config, std::vector<bool> &domain, std::vect
         int kk = dissociation[jj];
         particles.push_back((kk%config.n-(config.n-1)/2)*config.l);
         particles.push_back((kk/config.n-(config.n-1)/2)*config.l);
-    }
-
-    for(long unsigned int ii = 0; ii < particles.size()/2; ii++)
-    {
-        int x = floor(particles[2*ii]/config.l);
-        int y = floor(particles[2*ii+1]/config.l);
-        density[x+config.n*y]+=1;
+        density[kk]+=1;
     }
 
     return particles.size();

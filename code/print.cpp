@@ -1,6 +1,6 @@
 #include "header.h"
 
-void print(const Config &config, double t, const std::vector<bool> &domain, const std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, const std::vector<double> &particles, const std::vector<int> &density, const std::string folder){
+void print(const Config &config, double t, const std::vector<bool> &domain, const std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, const std::vector<int> &density, const std::string folder){
 
     std::filesystem::create_directory(folder);
 
@@ -23,15 +23,6 @@ void print(const Config &config, double t, const std::vector<bool> &domain, cons
     for (long unsigned int ii = 1; ii < print_fields_range.size(); ii++)
         print_fields_range[ii] += print_fields_range[ii-1];
 
-    std::vector<int> print_particles_range(config.nproc+1, (particles.size()/2)/config.nproc);
-    print_particles_range[0] = 0;
-
-    for (long unsigned int ii = 0; ii < particles.size()%config.nproc; ii++)
-        print_particles_range[ii+1] += 1;
-
-    for (long unsigned int ii = 1; ii < print_particles_range.size(); ii++)
-        print_particles_range[ii] += print_particles_range[ii-1];
-
     #pragma omp parallel
     {
         int pid = omp_get_thread_num();
@@ -40,7 +31,7 @@ void print(const Config &config, double t, const std::vector<bool> &domain, cons
         print_fields.open(folder+"/fields_"+std::to_string(pid)+".dat");
 
         for(int ii = print_fields_range[pid]; ii < print_fields_range[pid+1]; ii++)
-            print_fields << domain[ii] << "\t" << phi[ii] << "\t" << electric_field[0][ii] << "\t" << electric_field[1][ii] << "\t" << density[ii] << "\n";
+            print_fields << domain[ii] << "," << phi[ii] << "," << electric_field[0][ii] << "," << electric_field[1][ii] << "," << density[ii] << "\n";
 
         print_fields.close();
 
@@ -53,13 +44,5 @@ void print(const Config &config, double t, const std::vector<bool> &domain, cons
             		print_fields << domain[ii] << "\n";
             }
         print_fields.close();
-
-        std::ofstream print_particles;
-        print_particles.open(folder+"/particles_"+std::to_string(pid)+".dat");
-
-        for (int ii = print_particles_range[pid]; ii < print_particles_range[pid+1]; ii++)
-            print_particles << particles[2*ii] << "\t" << particles[2*ii+1] << "\n";
-
-        print_particles.close();
     }
 }

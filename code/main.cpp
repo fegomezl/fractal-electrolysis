@@ -57,9 +57,7 @@ int main (int argc, char **argv){
         dt_old = dt;
     }
 
-    print(config, t, domain, phi, electric_field, particles, density);
-
-    return 0;
+    print(config, t, domain, phi, electric_field, density);
 
     if (config.verbose){
         std::cout << std::left << std::setw(12)
@@ -90,14 +88,14 @@ int main (int argc, char **argv){
 
         //Calculate new electric field
         dt_old = dt;
-        auto [relax_iter, relax_res] = relaxation(config, dt, domain, phi, electric_field);
+        auto [relax_iter, relax_res] = relaxation(config, dt, domain, phi, electric_field, density);
 
         if (last || vis_steps <= vis_iteration){
             //Update parameters
             vis_iteration = 0;
             vis_print += 1;
 
-            print(config, t, domain, phi, electric_field, particles, density, "results/data/data_"+std::to_string(vis_print));
+            print(config, t, domain, phi, electric_field, density, "results/data/data_"+std::to_string(vis_print));
         }
 
         if (config.verbose){
