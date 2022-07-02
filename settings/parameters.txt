@@ -14,14 +14,14 @@ K       (Kelvin)
 Simulation:
 4               #Threads
 1               #Verbose
-1400            #Time(s)
+400             #Time(s)
 5               #Visualitaion_Rate
 529             #Number_of_Elements(Lenghtwise)
 
 Algorithms:
 50              #Random_Seed
 1.0             #Relaxation_Alpha
-2E+3            #Relaxation_Max_Iterations
+2E+4            #Relaxation_Max_Iterations
 9E-6            #Relaxation_Max_Residue
 
 Kinematic:
@@ -35,7 +35,7 @@ Proportion:
 0.0543          #Molar_Volume(1/M)
 
 Dynamic:
-12.0             #Voltage_Difference(V)
+9.0             #Voltage_Difference(V)
 20.0            #Temperature(°C)
 0.733E-5        #Diffusivity(cm^2/s)
 2               #Oxidation_Number
