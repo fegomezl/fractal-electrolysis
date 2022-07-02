@@ -14,9 +14,9 @@ K       (Kelvin)
 Simulation:
 4               #Threads
 1               #Verbose
-4               #Time(s)
-1               #Visualitaion_Rate
-529             #Number_of_Elements(Lenghtwise)
+1500            #Time(s)
+120             #Visualitaion_Rate
+1301            #Number_of_Elements(Lenghtwise)
 
 Algorithms:
 50              #Random_Seed
@@ -35,7 +35,7 @@ Proportion:
 0.0543          #Molar_Volume(1/M)
 
 Dynamic:
-9.0             #Voltage_Difference(V)
+12.0             #Voltage_Difference(V)
 20.0            #Temperature(°C)
 0.733E-5        #Diffusivity(cm^2/s)
 2               #Oxidation_Number

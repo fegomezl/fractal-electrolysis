@@ -1,6 +1,6 @@
 #include "header.h"
 
-double system_evolve(const Config &config, const double dt, Crandom &random, std::vector<bool> &domain, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, std::vector<double> &particles){
+double system_evolve(const Config &config, const double dt, Crandom &random, std::vector<bool> &domain, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, std::vector<double> &particles, std::vector<int> &density){
     /****
      * Move particles according to the Smoluchowski Diffusion Equation.
      *
@@ -25,6 +25,12 @@ double system_evolve(const Config &config, const double dt, Crandom &random, std
     int x0=0, x1=0, y0=0, y1=0;
     double Ex=0., Ey=0.;
 
+    //Reset Density counts
+    #pragma omp parallel for default(none) shared(density, config)
+    for(int j = 0; j < config.N; j++)
+        density[j]=0;
+
+
     for (long unsigned int ii = 0; ii < particles.size()/2; ii++){
 
         x = particles[2*ii]/config.l;
@@ -48,6 +54,9 @@ double system_evolve(const Config &config, const double dt, Crandom &random, std
 
         particles[2*ii]   += config.mu*dt*Ex + config.sigma*std::sqrt(dt)*random.gauss(0., 1.);
         particles[2*ii+1] += config.mu*dt*Ey + config.sigma*std::sqrt(dt)*random.gauss(0., 1.);
+
+        //Density count
+        density[x+config.n*y]+=1;
     }
 
     bool liquid = 0;

@@ -11,6 +11,7 @@ int main (int argc, char **argv){
     Config config;
     std::vector<bool> domain(config.N);
     std::vector<double> particles;
+    std::vector<int> density(config.N, 0);
     std::vector<double> phi(config.N);
     std::vector<double> electric_field_x(config.N, 0.0);
     std::vector<double> electric_field_y(config.N, 0.0);
@@ -45,7 +46,7 @@ int main (int argc, char **argv){
                   << "\n-------------------------------------------------------------------------------------\n";
     }
 
-    n_particles = initialization(config, domain, phi, electric_field, particles);
+    n_particles = initialization(config, domain, phi, electric_field, particles, density);
 
     {
         //Update corresponding time_step
@@ -56,7 +57,9 @@ int main (int argc, char **argv){
         dt_old = dt;
     }
 
-    print(config, t, domain, phi, electric_field, particles);
+    print(config, t, domain, phi, electric_field, particles, density);
+
+    return 0;
 
     if (config.verbose){
         std::cout << std::left << std::setw(12)
@@ -79,7 +82,7 @@ int main (int argc, char **argv){
         dt = std::min(dt, config.t_final - t);
 
         //Perform a time step
-        n_particles = system_evolve(config, dt, random, domain, phi, electric_field, particles);
+        n_particles = system_evolve(config, dt, random, domain, phi, electric_field, particles, density);
         t += dt;
 
         //Update visualization steps
@@ -94,7 +97,7 @@ int main (int argc, char **argv){
             vis_iteration = 0;
             vis_print += 1;
 
-            print(config, t, domain, phi, electric_field, particles, "results/data/data_"+std::to_string(vis_print));
+            print(config, t, domain, phi, electric_field, particles, density, "results/data/data_"+std::to_string(vis_print));
         }
 
         if (config.verbose){

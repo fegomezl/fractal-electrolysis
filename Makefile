@@ -1,6 +1,6 @@
 #Compiling parameters
 CXX = g++ 
-FLAGS = -std=c++17 -O3 -Wall -fopenmp#-g -fsanitize=address -fsanitize=leak -fsanitize=undefined
+FLAGS = -std=c++17 -O3 -Wall -fopenmp #-g -fsanitize=address -fsanitize=leak -fsanitize=undefined
 RUN = ./
 SOURCES = $(wildcard code/*.cpp)
 DEPENDENCIES = $(SOURCES:code/%.cpp=.objects/%.o)

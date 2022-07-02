@@ -85,6 +85,7 @@ def plot_fileds_and_particles(config,fields,particles,bit_map,X,Y,U,V,ii,d3,t):
     phi = fields[:,1]
     electric_field_x = fields[:,2]
     electric_field_y = fields[:,3]
+    density = fields[:,4]
     electric_field = np.hypot(electric_field_x, electric_field_y)
 
     Domain = np.reshape(domain, (-1, config.n))
@@ -92,6 +93,7 @@ def plot_fileds_and_particles(config,fields,particles,bit_map,X,Y,U,V,ii,d3,t):
     Phi = np.reshape(phi, (-1, config.n))
     Electric_field_x = np.reshape(electric_field_x, (-1, config.n))
     Electric_field_y = np.reshape(electric_field_y, (-1, config.n))
+    density = np.reshape(density, (-1, config.n))
     Electric_field = np.reshape(electric_field, (-1, config.n))
 
     try:
@@ -130,6 +132,10 @@ def plot_fileds_and_particles(config,fields,particles,bit_map,X,Y,U,V,ii,d3,t):
 
     #Color map
     plt.pcolormesh(X, Y, bit_map, cmap = cm.binary_r)
+    plt.show()
+
+    plt.pcolormesh(X, Y, density, cmap = cm.Reds)
+    plt.colorbar()
     plt.show()
 
     if (d3 != '3d'):
