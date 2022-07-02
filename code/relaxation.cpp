@@ -49,7 +49,7 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
 
             for(int jj = y0; jj < yf; jj++)
                 for(int ii = x0; ii < xf; ii++) {
-                    double r2 = config.l*config.l*((i-ii)*(i-ii)+(j-jj)*(j-jj));
+                    double r2 = (i-ii)*(i-ii)+(j-jj)*(j-jj);
                     r2 = std::sqrt(r2)/(r2+config.l*1e-5);
                     sumx+=Grad_N[0][ii+config.n*jj]*r2;
                     sumy+=Grad_N[1][ii+config.n*jj]*r2;
