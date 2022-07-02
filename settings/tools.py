@@ -93,7 +93,7 @@ def plot_fileds_and_particles(config,fields,bit_map,X,Y,U,V,ii,d3,t):
     Electric_field = np.reshape(electric_field, (-1, config.n))
 
     #Plot fields and particles
-    fig = plt.figure(figsize=(6,10))
+    fig = plt.figure()
     grid = gs.GridSpec(3, 2)
 
     fig.suptitle('t = '+str(t)+' s')

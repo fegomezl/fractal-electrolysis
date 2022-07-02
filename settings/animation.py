@@ -5,23 +5,26 @@ from tools import *
 
 def init():
     quad1.set_array([])
-    scatter1.set_offsets([])
-    return quad1,scatter1
+    quad2.set_array([])
+    return quad1,quad2
 
-def animate(n,config,quad1,scatter1,ax):
+def animate(n,config,quad1,quad2,ax):
     #Load data
-    ax.set_title('t = '+str(n*config.dt)+' s')
-    fields, particles, bit_map = load_data(config,n)
+    fields, bit_map, t = load_data(config,n)
+    ax.set_title('t = '+str(t)+' s')
 
     #Transform data
-    domain = fields[:,0]
-    Domain = np.reshape(domain, (-1, config.n))
+    Domain = fields[:,0]
+    Domain = np.reshape(Domain, (-1, config.n))
+
+    density = fields[:,4]
+    density = np.reshape(density, (-1, config.n))
 
     #Update plot
     quad1.set_array(Domain.ravel())
-    scatter1.set_offsets(particles[:,:2])
-
-    return quad1,scatter1
+    quad2.set_array(density.ravel())
+    
+    return quad1
 
 def main():
     #Parameters from the domain
@@ -39,30 +42,33 @@ def main():
 
     #Load data
     ii = 0
-    fields, particles = load_data(config,ii)
+    fields, bit_map, t = load_data(config,ii)
 
     #Transform data
-    domain = fields[:,0]
-    Domain = np.reshape(domain, (-1, config.n))
+    Domain = fields[:,0]
+    Domain = np.reshape(Domain, (-1, config.n))
 
-    try:
-        pos_x = np.append(particles[:,0], [2*config.L])
-        pos_y = np.append(particles[:,1], [2*config.L])
-    except:
-        pos_x = [2*config.L]
-        pos_y = [2*config.L]
+    density = fields[:,4]
+    density = np.reshape(density, (-1, config.n))
 
-    #create figure 
-    fig = plt.figure(figsize=(10,10),facecolor='white')
+    #Create figure 
+    fig = plt.figure(facecolor='white')
+
+    #Create transparency range 
+    c_white = cm.colors.colorConverter.to_rgba('white',alpha = 0)
+    c_black= cm.colors.colorConverter.to_rgba('black',alpha = 1)
+    cmap_rb = cm.colors.LinearSegmentedColormap.from_list('rb_cmap',[c_black,c_white],255)
 
     #Particles and domain
     ax1 = plt.subplot()
-    ax1.set_title('t = '+str(ii*config.dt)+' s')
+    ax1.set_title('t = '+str(t)+' s')
     ax1.set(xlim=(-config.L/2, config.L/2), ylim=(-config.L/2, config.L/2))
-    quad1 = plt.pcolormesh(X, Y, Domain, cmap = cm.binary_r) 
-    scatter1 = plt.scatter(pos_x, pos_y, marker='o', s=1)
+    quad2 = plt.pcolormesh(X, Y, density, cmap = cm.Blues) 
+    clb = plt.colorbar()
+    clb.set_label('Particle Density')
+    quad1 = plt.pcolormesh(X, Y, Domain, cmap=cmap_rb)
 
-    anim = animation.FuncAnimation(fig,animate,fargs=(config,quad1,scatter1,ax1,),frames=config.frames,interval=1,blit=False,repeat=False)
+    anim = animation.FuncAnimation(fig,animate,fargs=(config,quad1,quad2,ax1,),frames=26,interval=1,blit=False,repeat=False)
     anim.save('animation.gif', writer='imagemagick', fps=config.fps)
 
 

@@ -7,7 +7,7 @@ from PIL import Image, ImageChops
 
 def main():
     #Cargar Imagen
-    image = cv2.imread('test1.jpg')
+    image = cv2.imread('test4.jpg')
     plt.imshow(image)
     plt.show()
 
@@ -25,8 +25,8 @@ def main():
     #Extraer contorno
     image = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
     image = cv2.GaussianBlur(image,(3,3), 2*cv2.BORDER_DEFAULT)
-    image = cv2.convertScaleAbs(image, alpha=2.6, beta=50) 
-    image = cv2.equalizeHist(image)
+    #image = cv2.convertScaleAbs(image, alpha=2.6, beta=50) 
+    #image = cv2.equalizeHist(image)
 
     flag, image = cv2.threshold(image, 40, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
                                        #Mover ese 40 según sea necesario
@@ -34,6 +34,7 @@ def main():
     #Quitar puntitos
     #image = cv2.GaussianBlur(image,(9,9), cv2.BORDER_DEFAULT)
     #flag, image = cv2.threshold(image, 254, 255, cv2.THRESH_BINARY)
+    #image = cv2.adaptiveThreshold(image,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
 
     plt.imshow(image)
     plt.show()
