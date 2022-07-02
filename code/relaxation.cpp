@@ -26,38 +26,28 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
     }
 
     //Calculate Electric Field and Density Gradient
-    #pragma omp parallel for private(j,i) schedule(guided) reduction(max: EMax)
+    #pragma omp parallel for private(j,i,sumx,sumy) schedule(guided) reduction(max: EMax)
     for(j = 1; j < config.n-1; j++){
         for(i = 1; i < config.n-1; i++) {
             electric_field[0][i+config.n*j] = -(phi[i+1+config.n*j]-phi[i-1+config.n*j])/(2*config.l); //center deriv
             electric_field[1][i+config.n*j] = -(phi[i+config.n*(j+1)]-phi[i+config.n*(j-1)])/(2*config.l); //center deriv
             Grad_N[0][i+config.n*j] = (density[i+1+config.n*j]-density[i-1+config.n*j])/2.0;
             Grad_N[1][i+config.n*j] = (density[i+config.n*(j+1)]-density[i+config.n*(j-1)])/2.0;
+            sumx = 0;
+            sumy = 0;
+            for(int jj = 1; jj < config.n-1; jj++)
+                for(int ii = 1; ii < config.n-1; ii++) {
+                double r2 = (i-ii)*(i-ii)+(j-jj)*(j-jj);
+                r2 = std::sqrt(r2)/(r2+1e-8);
+                sumx+=Grad_N[0][ii+config.n*jj]*r2;
+                sumy+=Grad_N[1][ii+config.n*jj]*r2;
+            }
+
+            electric_field[0][i+config.n*j]+=config.E_cte*sumx;
+            electric_field[1][i+config.n*j]+=config.E_cte*sumy;
+
             EMax = std::max(EMax,std::hypot(electric_field[0][i+config.n*j], electric_field[1][i+config.n*j]));
         }
-    }
-
-
-    for (int k = 0; k < config.N; k++)
-    {
-        sumx = 0;
-        sumy = 0;
-        int ii = k%config.n;
-        int jj = k/config.n;
-
-        #pragma omp parallel for default(none) shared(Grad_N,ii,jj,config) reduction(+: sumx, sumy)
-        for (int kk = 0; kk < config.N; kk++)
-        {   
-            int iip = kk%config.n;
-            int jjp = kk/config.n;
-            double r2 = std::pow(ii-iip,2)+std::pow(jj-jjp,2);
-            r2 = std::sqrt(r2)/(r2+1e-8);
-            sumx+=Grad_N[0][kk]*r2;
-            sumy+=Grad_N[1][kk]*r2;
-        }
-
-        electric_field[0][k]+=config.E_cte*sumx;
-        electric_field[1][k]+=config.E_cte*sumy;
     }
 
     //Update corresponding time_step
