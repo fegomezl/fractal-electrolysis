@@ -38,7 +38,7 @@ void print(const Config &config, double t, const std::vector<bool> &domain, cons
         //Print only the fractal bitmap
         print_fields.open(folder+"/bit_map_"+std::to_string(pid)+".dat");
         for(int ii = print_fields_range[pid]; ii < print_fields_range[pid+1]; ii++){
-        		if (phi[ii]==config.V)
+        		if (std::abs(phi[ii]-config.V)<1e-12)
             		print_fields << 1 << "\n";
             	else
             		print_fields << domain[ii] << "\n";

@@ -83,6 +83,7 @@ int main (int argc, char **argv){
         //Perform a time step
         n_particles = system_evolve(config, dt, random, domain, phi, electric_field, particles, density);
         t += dt;
+        config.t = t;
 
         //Update visualization steps
         vis_steps = (dt == config.dt_init) ? config.vis_steps_max : int((config.dt_init/dt)*config.vis_steps_max);

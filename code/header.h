@@ -11,6 +11,7 @@
 
 struct Config{
     Config();
+    void Update_V(void){V=a/(t+b);};
 
     int nproc;
     bool verbose;
@@ -42,6 +43,12 @@ struct Config{
 
     double E_cte;
     int m;
+
+    double V0;
+    double t=0;
+    double a;
+    double b;
+    double Vf;
 };
 
 class Crandom{
@@ -77,8 +84,8 @@ class Crandom{
 
 double initialization(const Config &config, std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, std::vector<double> &particles, std::vector<int> &density);
 
-std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::vector<int> &density);
-std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::vector<int> &density, const bool verbose);
+std::tuple<int,double> relaxation(Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::vector<int> &density);
+std::tuple<int,double> relaxation(Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::vector<int> &density, const bool verbose);
 
 void print(const Config &config, double t, const std::vector<bool> &domain, const std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, const std::vector<int> &density, const std::string folder = "results/data/data_0"); 
 

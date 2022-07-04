@@ -14,14 +14,14 @@ K       (Kelvin)
 Simulation:
 4               #Threads
 1               #Verbose
-400             #Time(s)
+300             #Time(s)
 5               #Visualitaion_Rate
-529             #Number_of_Elements(Lenghtwise)
+601             #Number_of_Elements(Lenghtwise)
 
 Algorithms:
 50              #Random_Seed
 1.0             #Relaxation_Alpha
-2E+4            #Relaxation_Max_Iterations
+5E+4            #Relaxation_Max_Iterations
 9E-6            #Relaxation_Max_Residue
 
 Kinematic:
@@ -35,13 +35,15 @@ Proportion:
 0.0543          #Molar_Volume(1/M)
 
 Dynamic:
-9.0             #Voltage_Difference(V)
+12.4             #Voltage_Difference(V)
 20.0            #Temperature(°C)
 0.733E-5        #Diffusivity(cm^2/s)
 2               #Oxidation_Number
 8.617333262E-5  #Electron_Boltzmann_Constant(K*C/J)
 3.59991E-5      #Integral constant (2*e)/4*pi*80*e_0  (kg cm^3 s^-2 C^-1)
 0.4             #Integral Cutoff (cm)
+
+7.49            #Final Voltage
 
 Animation:
 10              #Frames per Second

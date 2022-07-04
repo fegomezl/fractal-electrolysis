@@ -1,11 +1,30 @@
 #include "header.h"
 
-std::tuple<int,double> relaxation(const Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::vector<int> &density){
+std::tuple<int,double> relaxation(Config &config, double &dt, const std::vector<bool> &domain, std::vector<double> &phi, std::vector<std::vector<double>> &electric_field, const std::vector<int> &density){
     int i=0,j=0,iter=0;
     double R=0,TotalRes=0,EMax=0,sumx=0,sumy=0;
     auto phi_new = phi;
     std::vector<std::vector<double>> Grad_N = {electric_field[0], electric_field[1]};
     int y0, yf, x0, xf;
+
+    double V_prev = config.V;
+    config.Update_V();
+
+    /*for(i=0; i<config.N; i++){
+        double xx = (i%config.n-(config.n-1)/2)*config.l;
+        double yy = (i/config.n-(config.n-1)/2)*config.l;
+        double r = std::hypot(xx, yy);
+        //        fronteras                              centro
+        phi[i] = (1-domain[i])*phi[i]*config.V/V_prev; //+ domain[i]*config.V*log(r/config.Rint)/log(config.Rext/config.Rint);
+    }*/
+
+    for(i=0; i<config.N; i++){
+        if (domain[i]==0 && phi[i]!=0)
+        {
+            phi[i] = phi[i]*config.V/V_prev;
+        }
+    }
+
 
     //array[j][i] -> array[i+n*j] j->y, i->x
     for (iter = 0; iter < config.relax_max_iter; ++iter)
@@ -58,7 +77,7 @@ std::tuple<int,double> relaxation(const Config &config, double &dt, const std::v
             electric_field[0][i+config.n*j]-=config.E_cte*sumx*domain[i+config.n*j];
             electric_field[1][i+config.n*j]-=config.E_cte*sumy*domain[i+config.n*j];
 
-            EMax = std::max(EMax,std::hypot(electric_field[0][i+config.n*j], electric_field[1][i+config.n*j]));
+            EMax = std::max(EMax,domain[i+config.n*j]*std::hypot(electric_field[0][i+config.n*j], electric_field[1][i+config.n*j]));
 
     }
 

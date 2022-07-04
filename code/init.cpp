@@ -90,6 +90,10 @@ Config::Config(){
     std::getline(parameters,line);
     double I_cutoff = std::stod(line.erase(line.find('#'), line.size()));
 
+    std::getline(parameters,line);
+    std::getline(parameters,line);
+    double Vf = std::stod(line.erase(line.find('#'), line.size()));
+
     parameters.close();
 
     /****
@@ -107,6 +111,11 @@ Config::Config(){
 
     E_cte/=(l*l);
     m = I_cutoff/l;
+
+    V0 = V;
+
+    a = t_final*V0*Vf/(V0-Vf);
+    b = t_final*Vf/(V0-Vf);
 
     std::cout << "nproc = " << nproc << std::endl;
     std::cout << "verbose = " << verbose << std::endl;
@@ -132,6 +141,7 @@ Config::Config(){
     std::cout << "m = " << m << std::endl;
     std::cout << "V_ref = " << V_ref << std::endl;
     std::cout << "V = " << V << std::endl;
+    std::cout << "Vf = " << Vf << std::endl;
     std::cout << "sigma = " << sigma << std::endl;
     std::cout << " mu " << mu << std::endl;
 }

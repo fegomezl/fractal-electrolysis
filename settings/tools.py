@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import gridspec as gs
 from matplotlib import cm
+from matplotlib import ticker
 
 def load_data(config, ii):
     try:
@@ -68,7 +69,7 @@ class Config(object):
         line = line.split("#")
         self.L = float(line[0])
 
-        for ii in range(0, 18):
+        for ii in range(0, 20):
             line = parameters.readline()
         line = line.split("#")
         self.fps = int(line[0])
@@ -114,7 +115,10 @@ def plot_fileds_and_particles(config,fields,bit_map,X,Y,U,V,ii,d3,t):
     ax = plt.subplot(grid[2, 0])
     ax.set(xlim=(-config.L/2, config.L/2), ylim=(-config.L/2, config.L/2))
     plt.pcolormesh(X, Y, Phi, cmap = cm.Blues)
-    plt.colorbar()
+    cb = plt.colorbar()
+    tick_locator = ticker.MaxNLocator(nbins=8)
+    cb.locator = tick_locator
+    cb.update_ticks()
 
     #Electric field
     ax = plt.subplot(grid[2, 1])
