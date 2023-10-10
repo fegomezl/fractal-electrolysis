@@ -1,6 +1,6 @@
 #include "header.h"
 
-void print(const Config &config, double t, const std::vector<bool> &domain, const std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, const std::vector<int> &density, const std::string folder){
+void print(const Config &config, const double t, const Eigen::SparseMatrix<double, Eigen::RowMajor> &Domain, const Eigen::VectorXd &phi, const std::vector<Eigen::VectorXd> &electric_field, const Eigen::VectorXd &density, const std::string folder){
 
     std::filesystem::create_directory(folder);
 
@@ -23,6 +23,8 @@ void print(const Config &config, double t, const std::vector<bool> &domain, cons
     for (long unsigned int ii = 1; ii < print_fields_range.size(); ii++)
         print_fields_range[ii] += print_fields_range[ii-1];
 
+    const Eigen::VectorXd domain = Domain.diagonal();
+
     #pragma omp parallel
     {
         int pid = omp_get_thread_num();
@@ -31,7 +33,7 @@ void print(const Config &config, double t, const std::vector<bool> &domain, cons
         print_fields.open(folder+"/fields_"+std::to_string(pid)+".dat");
 
         for(int ii = print_fields_range[pid]; ii < print_fields_range[pid+1]; ii++)
-            print_fields << domain[ii] << "," << phi[ii] << "," << electric_field[0][ii] << "," << electric_field[1][ii] << "," << density[ii] << "\n";
+            print_fields << 1 - domain[ii] << "," << phi[ii] << "," << electric_field[0][ii] << "," << electric_field[1][ii] << "," << density[ii] << "\n";
 
         print_fields.close();
 
@@ -41,7 +43,7 @@ void print(const Config &config, double t, const std::vector<bool> &domain, cons
         		if (phi[ii]==config.V)
             		print_fields << 1 << "\n";
             	else
-            		print_fields << domain[ii] << "\n";
+            		print_fields << 1 - domain[ii] << "\n";
             }
         print_fields.close();
     }

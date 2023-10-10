@@ -1,6 +1,6 @@
 #include "header.h"
 
-double system_evolve(const Config &config, const double dt, Crandom &random, std::vector<bool> &domain, std::vector<double> &phi, const std::vector<std::vector<double>> &electric_field, std::vector<double> &particles, std::vector<int> &density){
+double system_evolve(const Config &config, const double dt, Crandom &random, Eigen::SparseMatrix<double, Eigen::RowMajor> &Domain, Eigen::VectorXd &phi, const std::vector<Eigen::VectorXd> &electric_field, std::vector<double> &particles, Eigen::VectorXd &density){
     /****
      * Move particles according to the Smoluchowski Diffusion Equation.
      *
@@ -18,7 +18,6 @@ double system_evolve(const Config &config, const double dt, Crandom &random, std
      *  I00=(x0,y0)   I10=(x1,y0)
      *
      ****/ 
-
     auto particles_old = particles;
 
     double x=0., y=0.;
@@ -26,7 +25,8 @@ double system_evolve(const Config &config, const double dt, Crandom &random, std
     double Ex=0., Ey=0.;
 
     //Reset Density counts
-    std::fill(density.begin(), density.end(), 0);
+    density.setZero();
+    Eigen::VectorXd domain = Domain.diagonal();
 
     for (long unsigned int ii = 0; ii < particles.size()/2; ii++){
 
@@ -80,14 +80,16 @@ double system_evolve(const Config &config, const double dt, Crandom &random, std
             neighbors[3] = x1+(config.n-1)/2 + (y1+(config.n-1)/2)*config.n;
 
             for (auto &jj : neighbors){
-                liquid &= domain[jj];
+                liquid &= 1 - int(domain[jj]);
                 V_new *= phi[jj];
             }
 
             if (!liquid){
                 if (V_new == 0) {
                     for (auto &jj : neighbors){
-                        domain[jj] = 0;
+                        domain[jj] = 1;
+                        if (Domain.coeff(jj, jj) == 0)
+                            Domain.insert(jj, jj) = 1;
                         phi[jj] = 0.0;
                     }
                     particles.erase(particles.begin()+2*(ii-k), particles.begin()+2*(ii-k)+1);
